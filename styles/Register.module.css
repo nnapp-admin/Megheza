@@ -1,0 +1,432 @@
+.registerContainer {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: #0a0a0a;
+  color: #ffffff;
+  font-family: Helvetica, sans-serif;
+  overflow-x: hidden;
+}
+
+.registerSection {
+  flex: 1;
+  padding: 6rem 0;
+  text-align: center;
+}
+
+.registerSection h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #ffffff, #cccccc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.registerSection p {
+  font-size: 1.2rem;
+  color: #cccccc;
+  margin-bottom: 2rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.intro p:not(:last-child) {
+  text-align: justify; /* Justified alignment for first three paragraphs */
+}
+
+.intro p:last-child {
+  text-align: center; /* Center alignment for the last paragraph */
+}
+
+.registerForm {
+  max-width: 500px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.formGroup {
+  margin-bottom: 1.5rem;
+}
+
+.formGroup label {
+  display: block;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #cccccc;
+  margin-bottom: 0.5rem;
+}
+
+.formGroup input,
+.formGroup textarea {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #333;
+  border-radius: 8px;
+  background: #222;
+  color: #ffffff;
+  font-family: Helvetica, sans-serif;
+  font-size: 1rem;
+}
+
+.formGroup textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.formGroup input:focus,
+.formGroup textarea:focus {
+  outline: none;
+  border-color: #8b0000;
+  box-shadow: 0 0 5px rgba(139, 0, 0, 0.5);
+}
+
+.formGroup input[type="file"] {
+  display: none; /* Hide the default file input */
+}
+
+.profileCard {
+  width: 200px; /* Square dimensions */
+  height: 200px;
+  background: #333; /* Dark background to match your image */
+  border: 2px solid #8b0000; /* Red border to match your image */
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.profileCard:hover {
+  background: #444;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(139, 0, 0, 0.3);
+}
+
+.previewImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensures the image fills the square without distortion */
+}
+
+.profileCard .removeButton {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  transition: color 0.3s ease;
+}
+
+.profileCard .removeButton:hover {
+  color: #ff69b4; /* Pink on hover to match the upload icon */
+}
+
+.uploadContainer .removeButton {
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  transition: color 0.3s ease;
+}
+
+.uploadContainer .removeButton:hover {
+  color: #ff69b4;
+}
+
+.customFileUpload {
+  color: #ff69b4; /* Pink text to match your image */
+  font-size: 1.2rem;
+  text-align: center;
+  width: 100%;
+  padding: 1rem;
+  cursor: pointer;
+}
+
+.uploadContainer {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.uploadedFileContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 1rem;
+}
+
+.uploadedFileName {
+  color: #ff69b4;
+  font-size: 1.2rem;
+  text-align: center;
+  flex-grow: 1;
+  word-break: break-all;
+}
+
+.sectionHeader {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin: 2rem 0 1rem;
+  background: linear-gradient(135deg, #ffffff, #cccccc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.radioGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.radioLabel {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  color: #cccccc;
+}
+
+.radioLabel input {
+  margin-right: 0.5rem;
+}
+
+.roleGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.roleButton {
+  background: #222;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  color: #cccccc;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.roleButton.selected {
+  border-color: #8b0000;
+  box-shadow: 0 0 5px rgba(139, 0, 0, 0.5);
+}
+
+.roleButton:hover {
+  background: #333;
+  transform: translateY(-2px);
+}
+
+.otherInput {
+  margin-top: 0.5rem;
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #333;
+  border-radius: 8px;
+  background: #222;
+  color: #ffffff;
+  font-family: Helvetica, sans-serif;
+  font-size: 1rem;
+}
+
+.otherInput:focus {
+  outline: none;
+  border-color: #8b0000;
+  box-shadow: 0 0 5px rgba(139, 0, 0, 0.5);
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center; /* Changed from flex-start to center for horizontal alignment */
+  font-size: 0.9rem;
+  color: #cccccc;
+  line-height: 1.5;
+}
+
+.checkboxLabel input {
+  margin-right: 0.5rem;
+  margin-top: 0; /* Remove top margin to align with text */
+  appearance: none; /* Remove default browser styling */
+  width: 16px;
+  height: 16px;
+  border: 1px solid #333; /* Match other input borders */
+  border-radius: 4px;
+  background: #222; /* Match input background */
+  cursor: pointer;
+}
+
+.checkboxLabel input:checked {
+  background: #8b0000; /* Red background when checked */
+  border: 1px solid #333; /* Keep border consistent, no red stroke */
+}
+
+.checkboxLabel input:checked::after {
+  content: '✔';
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+}
+
+.note, .warning {
+  font-size: 0.9rem;
+  color: #cccccc;
+  margin-top: 1rem;
+}
+
+.warning a {
+  color: #ff69b4;
+  text-decoration: none;
+}
+
+.warning a:hover {
+  text-decoration: underline;
+}
+
+.progressBar {
+  margin: 1rem 0;
+  font-size: 1rem;
+  color: #cccccc;
+  text-align: center;
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+}
+
+.nextButton, .backButton {
+  background: linear-gradient(135deg, #8b0000, #8b0000);
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 25px;
+  font-family: Helvetica, sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.backButton {
+  background: #333;
+}
+
+.nextButton:hover, .backButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(139, 0, 0, 0.4);
+}
+
+.error {
+  color: #ff69b4;
+  font-size: 0.9rem;
+  margin-top: 0.3rem;
+}
+
+.submitButton {
+  background: linear-gradient(135deg, #8b0000, #8b0000);
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 25px;
+  font-family: Helvetica, sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  width: auto;
+  transition: all 0.3s ease;
+}
+
+.submitButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(139, 0, 0, 0.4);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .registerSection {
+    padding: 8rem 0 4rem 0; /* Increased padding-top from 4rem to 8rem to clear the header */
+  }
+
+  .registerSection h1 {
+    font-size: 2rem;
+  }
+
+  .registerSection p {
+    font-size: 1rem;
+  }
+
+  .intro p {
+    margin-left: 20px;
+    margin-right: 20px; /* Add 20px margin on left and right for mobile */
+  }
+
+  .intro .nextButton {
+    margin-left: 20px;
+    margin-right: 20px; /* Add 20px margin on left and right for Start Application button */
+    width: calc(100% - 40px); /* Adjust width to account for margins */
+  }
+
+  .registerForm {
+    max-width: 90%;
+  }
+
+  .profileCard {
+    width: 150px; /* Smaller square on mobile */
+    height: 150px;
+  }
+
+  .customFileUpload {
+    font-size: 1rem;
+    padding: 0.8rem;
+  }
+
+  .removeButton {
+    font-size: 1rem;
+  }
+
+  .uploadedFileContainer {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .uploadedFileName {
+    font-size: 1rem;
+  }
+
+  .buttonGroup {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .nextButton, .backButton {
+    width: 100%;
+  }
+
+  .submitButton {
+    width: calc(100% - 40px); /* Adjust width to account for margins */
+    margin-left: 20px;
+    margin-right: 20px; /* Equal margins on left and right */
+  }
+
+  .roleGroup {
+    flex-direction: column;
+  }
+}
