@@ -158,7 +158,6 @@ export default function RegisterPage() {
         <main>
           <section className={styles.registerSection}>
             <div className="container">
-              <h1>Join Megheza Network</h1>
               <div className={styles.progressBar}>
                 <span>Step {step} of 5</span>
               </div>
