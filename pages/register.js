@@ -582,7 +582,7 @@ export default function RegisterPage() {
         <footer>
           <div className="container">
             <div className="footer-bottom">
-              <p>© 2025 JournalistNet. All rights reserved.</p>
+              <p>Copyright © 2025 The Megheza. All Rights Reserved.</p>
             </div>
           </div>
         </footer>

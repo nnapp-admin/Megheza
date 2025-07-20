@@ -1,4 +1,3 @@
-/* styles/Splash.module.css */
 .splashContainer {
   display: flex;
   flex-direction: column;
@@ -19,12 +18,17 @@
   width: 100%;
   height: auto;
   margin-bottom: 2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.4);
+  border-radius: 15px; /* Added for rounded corners */
 }
 
 .tagline {
   font-family: Helvetica, sans-serif;
-  font-size: 2rem;
-  font-weight: 700;
+  font-size: 1rem; /* Reduced from 2rem */
+  font-weight: 600;
   color: #ffffff;
   margin-bottom: 2rem;
   max-width: 600px;
@@ -34,26 +38,6 @@
   line-height: 1.3;
 }
 
-.enterButton {
-  background: linear-gradient(135deg, #8b0000, #8b0000);
-  color: white;
-  padding: 1rem 3rem;
-  border: none;
-  border-radius: 50px;
-  font-family: Helvetica, sans-serif;
-  font-weight: 600;
-  font-size: 1.2rem;
-  cursor: pointer;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(139, 0, 0, 0.3);
-}
-
-.enterButton:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(139, 0, 0, 0.4);
-}
-
 /* Responsive Design */
 @media (max-width: 768px) {
   .logo {
@@ -61,11 +45,6 @@
   }
 
   .tagline {
-    font-size: 1.5rem;
-  }
-
-  .enterButton {
-    padding: 0.8rem 2rem;
-    font-size: 1rem;
+    font-size: 1.2rem; /* Reduced from 1.5rem */
   }
 }

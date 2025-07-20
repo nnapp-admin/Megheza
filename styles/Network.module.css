@@ -1,0 +1,75 @@
+.componentOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  overflow-y: auto;
+}
+
+.component {
+  background: #1a1a1a;
+  padding: 2rem;
+  border-radius: 10px;
+  border: 1px solid #333;
+  position: relative;
+  max-width: 1200px;
+  width: 90%;
+  color: #ffffff;
+  box-sizing: border-box;
+}
+
+.closeButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.closeButton:hover {
+  color: #cccccc;
+}
+
+.component h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.profileGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .profileGrid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .component {
+    padding: 1.5rem;
+  }
+
+  .component h2 {
+    font-size: 1.3rem;
+  }
+
+  .closeButton {
+    font-size: 1.3rem;
+  }
+}

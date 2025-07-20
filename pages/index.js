@@ -1,12 +1,11 @@
-// pages/index.js
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import styles from '../styles/Splash.module.css'; // Import CSS module for specific styling
+import styles from '../styles/Splash.module.css';
 
 export default function SplashPage() {
   const router = useRouter();
 
-  const handleEnterClick = () => {
+  const handleLogoClick = () => {
     router.push('/landingPage');
   };
 
@@ -27,11 +26,14 @@ export default function SplashPage() {
         />
       </Head>
       <div className={styles.splashContainer}>
-        <img src="/assets/Logo.png" alt="Megheza Logo" className={styles.logo} />
-        <h1 className={styles.tagline}>World’s First Verified-Only Journalist Community</h1>
-        <button className={styles.enterButton} onClick={handleEnterClick}>
-          Enter
-        </button>
+        <img
+          src="/assets/Logo.png"
+          alt="Megheza Logo"
+          className={styles.logo}
+          onClick={handleLogoClick}
+          style={{ cursor: 'pointer' }}
+        />
+        <h1 className={styles.tagline}>Every journalist has a story. This one begins with a click.</h1>
       </div>
     </>
   );

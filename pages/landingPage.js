@@ -1,4 +1,3 @@
-// pages/landingPage.js
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
@@ -83,11 +82,13 @@ export default function LandingPage() {
 
   const handleLoginSubmit = (e) => {
     e.preventDefault();
-    // Placeholder for login logic
+    // Log the input (for debugging, can be removed in production)
     console.log('Login submitted:', {
       phone: e.target.phone.value,
       password: e.target.password.value,
     });
+    // Redirect to dashboard regardless of input
+    router.push('/dashboard');
     setIsLoginModalOpen(false);
   };
 
@@ -96,7 +97,7 @@ export default function LandingPage() {
       <Head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Journalist Network Platform - Professional Network for Verified Journalists</title>
+        <title>Global Professional Network for Verified Journalists</title>
         <link
           rel="preload"
           as="style"
@@ -111,14 +112,9 @@ export default function LandingPage() {
         <header>
           <nav className="container">
             <a href="#" className="logo">
-              Megheza
+              <img src="/assets/Logo.png" alt="The Megheza Logo" className="logo-image" />
+              The Megheza
             </a>
-            <ul className="nav-links">
-              <li><a href="#features">Features</a></li>
-              <li><a href="#security">Security</a></li>
-              <li><a href="#conferences">Conferences</a></li>
-              <li><a href="#contact">Contact</a></li>
-            </ul>
             <button className="cta-button" onClick={handleLoginClick}>
               Login
             </button>
@@ -130,7 +126,7 @@ export default function LandingPage() {
             <div className="container">
               <div className="hero-content fade-in">
                 <div className="hero-text">
-                  <h1>The Professional Network for Verified Journalists</h1>
+                  <h1>Global Professional Network for Verified Journalists</h1>
                   <p>
                     Powered by the Power of 9. For a one-time $9 entry fee, connect with trusted peers worldwide, access exclusive resources, and grow your career in a secure space that values integrity. No noise, no monthly fees—just real journalism, real opportunity. Your voice deserves to be heard—among those who’ve earned the right to speak.
                   </p>
@@ -153,101 +149,14 @@ export default function LandingPage() {
             </div>
           </section>
 
-          {/* Rest of the sections (stats, features, cta-section, footer) remain unchanged */}
-          <section className="stats">
-            <div className="container">
-              <div className="stats-grid">
-                <div className="stat-item scroll-reveal">
-                  <div className="stat-number">10K+</div>
-                  <div className="stat-label">Verified Journalists</div>
-                </div>
-                <div className="stat-item scroll-reveal">
-                  <div className="stat-number">150+</div>
-                  <div className="stat-label">Countries Represented</div>
-                </div>
-                <div className="stat-item scroll-reveal">
-                  <div className="stat-number">500+</div>
-                  <div className="stat-label">Media Organizations</div>
-                </div>
-                <div className="stat-item scroll-reveal">
-                  <div className="stat-number">1M+</div>
-                  <div className="stat-label">Secure Messages</div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <section className="features" id="features">
-            <div className="container">
-              <div className="features-grid">
-                <div className="feature-card scroll-reveal">
-                  <span className="feature-icon">🔐</span>
-                  <h3>Verified Access Only</h3>
-                  <p>Rigorous verification process ensures only credentialed journalists gain access to our platform.</p>
-                  <ul className="feature-list">
-                    <li>Press credential verification</li>
-                    <li>Media organization validation</li>
-                    <li>Professional reference checks</li>
-                    <li>Multi-factor authentication</li>
-                  </ul>
-                </div>
-                <div className="feature-card scroll-reveal">
-                  <span className="feature-icon">🤝</span>
-                  <h3>Professional Networking</h3>
-                  <p>Connect with journalists worldwide, find collaborators, and build meaningful professional relationships.</p>
-                  <ul className="feature-list">
-                    <li>Beat-specific communities</li>
-                    <li>Mentorship matching</li>
-                    <li>Collaborative project spaces</li>
-                    <li>Industry expertise sharing</li>
-                  </ul>
-                </div>
-                <div className="feature-card scroll-reveal">
-                  <span className="feature-icon">🎥</span>
-                  <h3>Virtual Conferences</h3>
-                  <p>Attend and host professional conferences with integrated networking and interactive features.</p>
-                  <ul className="feature-list">
-                    <li>Live streaming capabilities</li>
-                    <li>Interactive workshops</li>
-                    <li>Networking lounges</li>
-                    <li>Q&A and polling features</li>
-                  </ul>
-                </div>
-                <div className="feature-card scroll-reveal">
-                  <span className="feature-icon">📚</span>
-                  <h3>Professional Development</h3>
-                  <p>Access resources, training modules, and certification tracking to advance your journalism skills.</p>
-                  <ul className="feature-list">
-                    <li>Resource library</li>
-                    <li>Training modules</li>
-                    <li>Certification tracking</li>
-                    <li>Skills endorsement system</li>
-                  </ul>
-                </div>
-                <div className="feature-card scroll-reveal">
-                  <span className="feature-icon">🛡️</span>
-                  <h3>Source Protection</h3>
-                  <p>Advanced security features designed specifically for journalism's unique confidentiality needs.</p>
-                  <ul className="feature-list">
-                    <li>End-to-end encryption</li>
-                    <li>Secure file sharing</li>
-                    <li>Anonymous communication</li>
-                    <li>GDPR compliance</li>
-                  </ul>
-                </div>
-                <div className="feature-card scroll-reveal">
-                  <span className="feature-icon">💼</span>
-                  <h3>Career Opportunities</h3>
-                  <p>Discover job opportunities, freelance projects, and career advancement resources.</p>
-                  <ul className="feature-list">
-                    <li>Job board access</li>
-                    <li>Freelance opportunities</li>
-                    <li>Portfolio showcase</li>
-                    <li>Career guidance</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
+          <section className="world-image-section scroll-reveal">
+            <img
+              src="/assets/world.png"
+              alt="World Network"
+              className="world-image"
+              width="1230"
+              height="300"
+            />
           </section>
 
           <section className="cta-section">
