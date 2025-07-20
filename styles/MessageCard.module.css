@@ -13,6 +13,18 @@
   margin-bottom: 1rem;
 }
 
+.chatContent {
+  transition: opacity 0.3s ease;
+}
+
+.chatContent.fadeIn {
+  opacity: 1;
+}
+
+.chatContent.fadeOut {
+  opacity: 0;
+}
+
 .chatList {
   list-style: none;
 }
@@ -59,6 +71,127 @@
   color: #888;
 }
 
+/* Chat Window Styles */
+.chatWindow {
+  display: flex;
+  flex-direction: column;
+  height: 400px;
+  background: #2a2a2a;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.chatHeader {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  background: #333;
+  border-bottom: 1px solid #444;
+}
+
+.backButton {
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-right: 1rem;
+}
+
+.backButton:hover {
+  color: #cccccc;
+}
+
+.chatHeader h4 {
+  font-size: 1.2rem;
+  color: #ffffff;
+  margin: 0;
+}
+
+.messageList {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.message {
+  display: flex;
+  max-width: 70%;
+  margin-bottom: 0.5rem;
+}
+
+.message.sent {
+  align-self: flex-end;
+}
+
+.message.received {
+  align-self: flex-start;
+}
+
+.messageContent {
+  padding: 0.8rem;
+  border-radius: 10px;
+  background: #3a3a3a;
+}
+
+.message.sent .messageContent {
+  background: #8B0000;
+  color: #ffffff;
+}
+
+.message.received .messageContent {
+  background: #555;
+  color: #ffffff;
+}
+
+.messageContent p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.messageTime {
+  font-size: 0.7rem;
+  color: #cccccc;
+  margin-top: 0.2rem;
+  display: block;
+  text-align: right;
+}
+
+.messageForm {
+  display: flex;
+  padding: 1rem;
+  border-top: 1px solid #444;
+  background: #333;
+}
+
+.messageInput {
+  flex: 1;
+  padding: 0.8rem;
+  border: 1px solid #444;
+  border-radius: 5px;
+  background: #2a2a2a;
+  color: #ffffff;
+  font-size: 0.9rem;
+}
+
+.sendButton {
+  background: #8B0000;
+  color: #ffffff;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 5px;
+  margin-left: 0.5rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.sendButton:hover {
+  background: #a30000;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .chatSection {
@@ -67,5 +200,17 @@
 
   .chatItem {
     padding: 0.8rem;
+  }
+
+  .chatWindow {
+    height: 300px;
+  }
+
+  .messageInput {
+    padding: 0.6rem;
+  }
+
+  .sendButton {
+    padding: 0.6rem 1rem;
   }
 }

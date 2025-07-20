@@ -395,6 +395,8 @@ footer {
 
   .world-image {
     width: 100%;
-    height: auto;
+    height: 300px; /* Set fixed height for mobile */
+    object-fit: cover; /* Ensure image covers the area without distortion */
+    object-position: center; /* Center the image */
   }
 }

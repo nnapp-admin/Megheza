@@ -8,6 +8,60 @@
   overflow-x: hidden;
 }
 
+.siteHeader {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  max-width: 100vw;
+  background: rgba(10, 10, 10, 0.95);
+  backdrop-filter: blur(10px);
+  z-index: 1000;
+  padding: 1rem 0;
+  border-bottom: 1px solid #333;
+  box-sizing: border-box;
+  Zoom: 10px;
+  overflow-x: hidden;
+}
+
+.siteNav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #ffffff;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logoImage {
+  height: 3rem;
+  width: auto;
+  display: block;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.main {
+  flex: 1;
+}
+
 .registerSection {
   flex: 1;
   padding: 6rem 0;
@@ -143,11 +197,11 @@
 }
 
 .uploadContainer .removeButton:hover {
-  color: #ff69b4;
+  color: #008035;
 }
 
 .customFileUpload {
-  color: #ff69b4; /* Pink text to match your image */
+  color: #008035; /* Pink text to match your image */
   font-size: 1.2rem;
   text-align: center;
   width: 100%;
@@ -172,7 +226,7 @@
 }
 
 .uploadedFileName {
-  color: #ff69b4;
+  color: #008035;
   font-size: 1.2rem;
   text-align: center;
   flex-grow: 1;
@@ -252,7 +306,7 @@
 
 .checkboxLabel {
   display: flex;
-  align-items: center; /* Changed from flex-start to center for horizontal alignment */
+  align-items: center;
   font-size: 0.9rem;
   color: #cccccc;
   line-height: 1.5;
@@ -260,19 +314,19 @@
 
 .checkboxLabel input {
   margin-right: 0.5rem;
-  margin-top: 0; /* Remove top margin to align with text */
-  appearance: none; /* Remove default browser styling */
+  margin-top: 0;
+  appearance: none;
   width: 16px;
   height: 16px;
-  border: 1px solid #333; /* Match other input borders */
+  border: 1px solid #333;
   border-radius: 4px;
-  background: #222; /* Match input background */
+  background: #222;
   cursor: pointer;
 }
 
 .checkboxLabel input:checked {
-  background: #8b0000; /* Red background when checked */
-  border: 1px solid #333; /* Keep border consistent, no red stroke */
+  background: #4400ff;
+  border: 1px solid #333;
 }
 
 .checkboxLabel input:checked::after {
@@ -284,14 +338,15 @@
   font-size: 12px;
 }
 
-.note, .warning {
+.note,
+.warning {
   font-size: 0.9rem;
   color: #cccccc;
   margin-top: 1rem;
 }
 
 .warning a {
-  color: #ff69b4;
+  color: #ff0000;
   text-decoration: none;
 }
 
@@ -312,7 +367,8 @@
   margin-top: 2rem;
 }
 
-.nextButton, .backButton {
+.nextButton,
+.backButton {
   background: linear-gradient(135deg, #8b0000, #8b0000);
   color: white;
   padding: 0.8rem 1.5rem;
@@ -329,13 +385,14 @@
   background: #333;
 }
 
-.nextButton:hover, .backButton:hover {
+.nextButton:hover,
+.backButton:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(139, 0, 0, 0.4);
 }
 
 .error {
-  color: #ff69b4;
+  color: #ff0000;
   font-size: 0.9rem;
   margin-top: 0.3rem;
 }
@@ -359,10 +416,38 @@
   box-shadow: 0 6px 20px rgba(139, 0, 0, 0.4);
 }
 
+.siteFooter {
+  text-align: center;
+  padding: 1rem 0;
+  color: #cccccc;
+}
+
+.footerBottom {
+  text-align: center;
+  padding: 1rem 0;
+  color: #cccccc;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
+  .siteHeader {
+    padding: 0.5rem 0;
+  }
+
+  .siteNav {
+    padding: 0 15px;
+  }
+
+  .logo {
+    font-size: 1.5rem;
+  }
+
+  .logoImage {
+    height: 2.5rem;
+  }
+
   .registerSection {
-    padding: 8rem 0 4rem 0; /* Increased padding-top from 4rem to 8rem to clear the header */
+    padding: 8rem 0 4rem 0; /* Increased padding-top to clear the header */
   }
 
   .registerSection h1 {
@@ -375,13 +460,13 @@
 
   .intro p {
     margin-left: 20px;
-    margin-right: 20px; /* Add 20px margin on left and right for mobile */
+    margin-right: 20px;
   }
 
   .intro .nextButton {
     margin-left: 20px;
-    margin-right: 20px; /* Add 20px margin on left and right for Start Application button */
-    width: calc(100% - 40px); /* Adjust width to account for margins */
+    margin-right: 20px;
+    width: calc(100% - 40px);
   }
 
   .registerForm {
@@ -389,7 +474,7 @@
   }
 
   .profileCard {
-    width: 150px; /* Smaller square on mobile */
+    width: 150px;
     height: 150px;
   }
 
@@ -416,14 +501,15 @@
     gap: 1rem;
   }
 
-  .nextButton, .backButton {
+  .nextButton,
+  .backButton {
     width: 100%;
   }
 
   .submitButton {
-    width: calc(100% - 40px); /* Adjust width to account for margins */
+    width: calc(100% - 40px);
     margin-left: 20px;
-    margin-right: 20px; /* Equal margins on left and right */
+    margin-right: 20px;
   }
 
   .roleGroup {

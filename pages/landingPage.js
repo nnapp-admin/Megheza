@@ -176,13 +176,6 @@ export default function LandingPage() {
           <div className="container">
             <div className="footer-content">
               <div className="footer-section">
-                <h3>Platform</h3>
-                <ul>
-                  <li><a href="#">Features</a></li>
-                  <li><a href="#">Security</a></li>
-                  <li><a href="#">Conferences</a></li>
-                  <li><a href="#">Resources</a></li>
-                </ul>
               </div>
               <div className="footer-section">
                 <h3>Support</h3>
@@ -203,7 +196,7 @@ export default function LandingPage() {
                 </ul>
               </div>
               <div className="footer-section">
-                <h3>Community</h3>
+                <h3>Global Consortium</h3>
                 <ul>
                   <li><a href="#">Guidelines</a></li>
                   <li><a href="#">Ethics Code</a></li>

@@ -1,4 +1,3 @@
-// pages/register.js
 import { useState, useRef } from 'react';
 import Head from 'next/head';
 import styles from '../styles/Register.module.css';
@@ -114,13 +113,13 @@ export default function RegisterPage() {
   const handleNext = () => {
     if (step === 0 || validateSection(step)) {
       setStep((prev) => prev + 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
   const handleBack = () => {
     setStep((prev) => prev - 1);
-    window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleSubmit = (e) => {
@@ -148,16 +147,17 @@ export default function RegisterPage() {
         />
       </Head>
       <div className={styles.registerContainer}>
-        <header>
-          <nav className="container">
-            <a href="/landingPage" className="logo">
+        <header className={styles.siteHeader}>
+          <nav className={styles.siteNav}>
+            <a href="#" className={styles.logo}>
+              <img src="/assets/Logo.png" alt="The Megheza Logo" className={styles.logoImage} />
               Megheza
             </a>
           </nav>
         </header>
-        <main>
+        <main className={styles.main}>
           <section className={styles.registerSection}>
-            <div className="container">
+            <div className={styles.container}>
               <div className={styles.progressBar}>
                 <span>Step {step} of 5</span>
               </div>
@@ -165,8 +165,8 @@ export default function RegisterPage() {
               {step === 0 && (
                 <div className={styles.intro}>
                   <p>
-                    This is more than a form—it's your entry into a community where journalism still holds the line. This
-                    space is built for reporters, by reporters, and access is granted only to those who’ve earned their
+                    This is more than a form—it's your entry into a global consortium where journalism still holds the line. This
+                    space is built for reporters, by reporters,-added access is granted only to those who’ve earned their
                     place through real work in the field.
                   </p>
                   <p>
@@ -244,7 +244,7 @@ export default function RegisterPage() {
                         placeholder="Enter your email"
                         value={formData.email}
                         onChange={handleInputChange}
-                        required
+                        required выбирать
                       />
                       {errors.email && <p className={styles.error}>{errors.email}</p>}
                     </div>
@@ -579,9 +579,9 @@ export default function RegisterPage() {
             </div>
           </section>
         </main>
-        <footer>
-          <div className="container">
-            <div className="footer-bottom">
+        <footer className={styles.siteFooter}>
+          <div className={styles.container}>
+            <div className={styles.footerBottom}>
               <p>Copyright © 2025 The Megheza. All Rights Reserved.</p>
             </div>
           </div>
