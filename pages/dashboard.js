@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Image from 'next/image';
-import MessageCard from './MessageCard';
-import UserProfile from './UserProfile';
-import ProfileCard from './ProfileCard';
-import Shop from './Shop';
+import MessageCard from '../components/MessageCard';
+import UserProfile from '../components/UserProfile';
+import ProfileCard from '../components/ProfileCard';
+import Shop from '../components/Shop';
 import styles from '../styles/Dashboard.module.css';
 
 export default function Dashboard() {
