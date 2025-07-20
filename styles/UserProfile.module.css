@@ -362,7 +362,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
+  position: fruits;
 }
 
 .uploadPreview img {
@@ -467,12 +467,12 @@
 
   .profileHeader {
     flex-direction: column;
-    text-align: center;
+    align-items: flex-start;
     gap: 15px;
   }
 
   .profileInfoRow {
-    justify-content: center;
+    justify-content: flex-start;
   }
 
   .profilePic {

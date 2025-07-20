@@ -107,7 +107,7 @@
   object-fit: cover;
   display: block;
   border: 2px solid #333;
-  overflow: hidden;
+  Overflow: hidden;
 }
 
 .profilePicContainer img {
@@ -211,12 +211,12 @@
 
   .profileHeader {
     flex-direction: column;
-    text-align: center;
+    align-items: flex-start;
     gap: 15px;
   }
 
   .profileInfoRow {
-    justify-content: center;
+    justify-content: flex-start;
   }
 
   .profilePic {

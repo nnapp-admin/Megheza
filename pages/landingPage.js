@@ -113,7 +113,7 @@ export default function LandingPage() {
           <nav className="container">
             <a href="#" className="logo">
               <img src="/assets/Logo.png" alt="The Megheza Logo" className="logo-image" />
-              The Megheza
+              Megheza
             </a>
             <button className="cta-button" onClick={handleLoginClick}>
               Login
