@@ -2,19 +2,20 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Image from 'next/image';
-import Network from './Network'; // Import the actual Network component
-import styles from '../styles/Dashboard.module.css'; // Import CSS module for dashboard styling
+import MessageCard from './MessageCard';
+import UserProfile from './UserProfile';
+import ProfileCard from './ProfileCard';
+import Shop from './Shop';
+import styles from '../styles/Dashboard.module.css';
 
 export default function Dashboard() {
   const router = useRouter();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isNetworkOpen, setIsNetworkOpen] = useState(false);
   const [isShopOpen, setIsShopOpen] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // New state for sidebar
-  const [editMode, setEditMode] = useState(null); // 'pic', 'name', 'profession', 'bio'
-  const [tempValue, setTempValue] = useState('');
-  
-  // Mock user data (replace with actual user data from auth context or API)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isDashboardVisible, setIsDashboardVisible] = useState(true);
+
   const [user, setUser] = useState({
     name: 'Alex Rivera',
     profession: 'Pulse Narrative',
@@ -22,7 +23,7 @@ export default function Dashboard() {
     profilePic: '/assets/profile-placeholder.png',
     isOnline: true,
   });
-  // Mock chat list data (replace with actual data from API)
+
   const [chatList] = useState([
     { id: 1, name: 'John Smith', lastMessage: 'Hey, check out this story...', time: '10:30 AM' },
     { id: 2, name: 'Emma Wilson', lastMessage: 'Can we discuss the article?', time: 'Yesterday' },
@@ -30,7 +31,6 @@ export default function Dashboard() {
   ]);
 
   useEffect(() => {
-    // Scroll animations
     const observerOptions = {
       threshold: 0.05,
       rootMargin: '0px 0px -100px 0px',
@@ -39,17 +39,16 @@ export default function Dashboard() {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          entry.target.classList.add(styles.revealed);
+          entry.target.classList.add('revealed');
           observer.unobserve(entry.target);
         }
       });
     }, observerOptions);
 
-    document.querySelectorAll(`.${styles.scrollReveal}`).forEach((el) => {
+    document.querySelectorAll('.scroll-reveal').forEach((el) => {
       observer.observe(el);
     });
 
-    // Smooth scrolling for navigation links
     const handleSmoothScroll = (e) => {
       e.preventDefault();
       const targetId = e.currentTarget.getAttribute('href');
@@ -67,17 +66,14 @@ export default function Dashboard() {
       anchor.addEventListener('click', handleSmoothScroll);
     });
 
-    // Add .loaded class to body after animations
     const timer = setTimeout(() => {
       document.body.classList.add('loaded');
     }, 1000);
 
-    // Ensure .loaded is added on window load as fallback
     window.addEventListener('load', () => {
       document.body.classList.add('loaded');
     });
 
-    // Cleanup event listeners on component unmount
     return () => {
       anchors.forEach((anchor) => {
         anchor.removeEventListener('click', handleSmoothScroll);
@@ -108,58 +104,29 @@ export default function Dashboard() {
   };
 
   const handleNetworkClick = () => {
-    setIsNetworkOpen(true);
-    setIsSidebarOpen(false); // Close sidebar on selection
+    setIsDashboardVisible(false);
+    setTimeout(() => {
+      setIsNetworkOpen(true);
+      setIsShopOpen(false);
+      setIsSidebarOpen(false);
+    }, 300);
   };
 
   const handleShopClick = () => {
-    setIsShopOpen(true);
-    setIsSidebarOpen(false); // Close sidebar on selection
+    setIsDashboardVisible(false);
+    setTimeout(() => {
+      setIsShopOpen(true);
+      setIsNetworkOpen(false);
+      setIsSidebarOpen(false);
+    }, 300);
   };
 
   const handleCloseComponent = () => {
     setIsNetworkOpen(false);
     setIsShopOpen(false);
-  };
-
-  const handleEditClick = (field) => {
-    setEditMode(field);
-    if (field === 'name') setTempValue(user.name);
-    else if (field === 'profession') setTempValue(user.profession);
-    else if (field === 'bio') setTempValue(user.bio);
-  };
-
-  const handleSaveEdit = () => {
-    if (editMode === 'name') {
-      setUser(prev => ({ ...prev, name: tempValue }));
-    } else if (editMode === 'profession') {
-      setUser(prev => ({ ...prev, profession: tempValue }));
-    } else if (editMode === 'bio') {
-      setUser(prev => ({ ...prev, bio: tempValue }));
-    }
-    setEditMode(null);
-    setTempValue('');
-  };
-
-  const handleCancelEdit = () => {
-    setEditMode(null);
-    setTempValue('');
-  };
-
-  const handleProfilePicChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setUser(prev => ({ ...prev, profilePic: event.target.result }));
-      };
-      reader.readAsDataURL(file);
-    }
-    setEditMode(null);
-  };
-
-  const toggleOnlineStatus = () => {
-    setUser(prev => ({ ...prev, isOnline: !prev.isOnline }));
+    setTimeout(() => {
+      setIsDashboardVisible(true);
+    }, 300);
   };
 
   const toggleSidebar = () => {
@@ -185,10 +152,10 @@ export default function Dashboard() {
       <div className={styles.pageWrapper}>
         <header className={styles.header}>
           <nav className={styles.nav}>
-            <a href="#" className={styles.logo}>
+            <button className={styles.logo} onClick={handleCloseComponent}>
               <Image src="/assets/Logo.png" alt="The Megheza Logo" width={48} height={48} className={styles.logoImage} />
               <span className={styles.logoText}>Megheza</span>
-            </a>
+            </button>
             <div className={styles.headerButtons}>
               <button className={styles.headerButton} onClick={handleNetworkClick}>
                 Network
@@ -206,197 +173,20 @@ export default function Dashboard() {
         <main className={styles.main}>
           <section className={styles.dashboardSection}>
             <div className={styles.container}>
-              <div className={`${styles.profileSection} ${styles.scrollReveal}`}>
-                {/* Status Toggle - Top Right */}
-                <div className={styles.statusToggle}>
-                  <div 
-                    className={`${styles.statusIndicator} ${user.isOnline ? styles.online : styles.offline}`}
-                  ></div>
-                  <span className={styles.statusText} onClick={toggleOnlineStatus}>
-                    {user.isOnline ? 'Online' : 'Offline'}
-                  </span>
-                </div>
-
-                <div className={styles.profileHeader}>
-                  <div className={styles.profilePicContainer}>
-                    <Image
-                      src={user.profilePic}
-                      alt="Profile Picture"
-                      width={80}
-                      height={80}
-                      className={styles.profilePic}
-                      onClick={() => handleEditClick('pic')}
-                    />
-                    <div className={styles.editIcon} onClick={() => handleEditClick('pic')}>
-                      ✏️
-                    </div>
-                  </div>
-                  <div className={styles.profileInfo}>
-                    <div className={styles.profileInfoRow}>
-                      <h2 className={styles.profileName} onClick={() => handleEditClick('name')}>
-                        {user.name}
-                      </h2>
-                      <span className={styles.textEditIcon} onClick={() => handleEditClick('name')}>
-                        ✏️
-                      </span>
-                    </div>
-                    <div className={styles.profileInfoRow}>
-                      <p className={styles.profileProfession} onClick={() => handleEditClick('profession')}>
-                        {user.profession}
-                      </p>
-                      <span className={styles.textEditIcon} onClick={() => handleEditClick('profession')}>
-                        ✏️
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div className={styles.profileBioContainer}>
-                  <div className={styles.profileBio} onClick={() => handleEditClick('bio')}>
-                    <p>{user.bio}</p>
-                  </div>
-                  <span className={styles.textEditIcon} onClick={() => handleEditClick('bio')}>
-                    ✏️
-                  </span>
-                </div>
+              <div className={`${styles.dashboardContent} ${isDashboardVisible ? styles.visible : styles.hidden}`}>
+                <UserProfile user={user} setUser={setUser} />
+                <MessageCard chatList={chatList} />
               </div>
 
-              <div className={`${styles.chatSection} ${styles.scrollReveal}`}>
-                <h3>Messages</h3>
-                <ul className={styles.chatList}>
-                  {chatList.map((chat) => (
-                    <li key={chat.id} className={styles.chatItem}>
-                      <div className={styles.chatAvatar}></div>
-                      <div className={styles.chatInfo}>
-                        <h4>{chat.name}</h4>
-                        <p>{chat.lastMessage}</p>
-                      </div>
-                      <span className={styles.chatTime}>{chat.time}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Edit Modals */}
-              {editMode === 'pic' && (
-                <div className={styles.modalOverlay}>
-                  <div className={styles.editModal}>
-                    <button className={styles.closeButton} onClick={handleCancelEdit}>
-                      ×
-                    </button>
-                    <h3>Change Profile Picture</h3>
-                    <div className={styles.editForm}>
-                      <div className={styles.uploadBox}>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={handleProfilePicChange}
-                          className={styles.fileInput}
-                          id="profile-pic-upload"
-                        />
-                        <label htmlFor="profile-pic-upload" className={styles.uploadLabel}>
-                          <div className={styles.uploadContent}>
-                            <div className={styles.uploadIcon}>📷</div>
-                            <div className={styles.uploadText}>
-                              <span>Click to upload image</span>
-                              <small>JPG, PNG, GIF up to 10MB</small>
-                            </div>
-                          </div>
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {editMode === 'name' && (
-                <div className={styles.modalOverlay}>
-                  <div className={styles.editModal}>
-                    <button className={styles.closeButton} onClick={handleCancelEdit}>
-                      ×
-                    </button>
-                    <h3>Edit Name</h3>
-                    <div className={styles.editForm}>
-                      <input
-                        type="text"
-                        value={tempValue}
-                        onChange={(e) => setTempValue(e.target.value)}
-                        className={styles.editInput}
-                        placeholder="Enter your name"
-                        autoFocus
-                      />
-                      <div className={styles.editButtons}>
-                        <button className={styles.cancelButton} onClick={handleCancelEdit}>
-                          Cancel
-                        </button>
-                        <button className={styles.saveButton} onClick={handleSaveEdit}>
-                          Save
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {editMode === 'profession' && (
-                <div className={styles.modalOverlay}>
-                  <div className={styles.editModal}>
-                    <button className={styles.closeButton} onClick={handleCancelEdit}>
-                      ×
-                    </button>
-                    <h3>Edit Profession</h3>
-                    <div className={styles.editForm}>
-                      <input
-                        type="text"
-                        value={tempValue}
-                        onChange={(e) => setTempValue(e.target.value)}
-                        className={styles.editInput}
-                        placeholder="Enter your profession"
-                        autoFocus
-                      />
-                      <div className={styles.editButtons}>
-                        <button className={styles.cancelButton} onClick={handleCancelEdit}>
-                          Cancel
-                        </button>
-                        <button className={styles.saveButton} onClick={handleSaveEdit}>
-                          Save
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {editMode === 'bio' && (
-                <div className={styles.modalOverlay}>
-                  <div className={styles.editModal}>
-                    <button className={styles.closeButton} onClick={handleCancelEdit}>
-                      ×
-                    </button>
-                    <h3>Edit Bio</h3>
-                    <div className={styles.editForm}>
-                      <textarea
-                        value={tempValue}
-                        onChange={(e) => setTempValue(e.target.value)}
-                        className={styles.editTextarea}
-                        placeholder="Tell us about yourself"
-                        autoFocus
-                      />
-                      <div className={styles.editButtons}>
-                        <button className={styles.cancelButton} onClick={handleCancelEdit}>
-                          Cancel
-                        </button>
-                        <button className={styles.saveButton} onClick={handleSaveEdit}>
-                          Save
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Network and Shop Components */}
               {isNetworkOpen && (
-                <Network onClose={handleCloseComponent} />
+                <div className={styles.componentOverlay}>
+                  <div className={styles.component}>
+                    <button className={styles.closeButton} onClick={handleCloseComponent}>
+                      ×
+                    </button>
+                    <ProfileCard initialUserData={user} isRevealed={true} />
+                  </div>
+                </div>
               )}
               {isShopOpen && (
                 <div className={styles.componentOverlay}>
@@ -404,8 +194,12 @@ export default function Dashboard() {
                     <button className={styles.closeButton} onClick={handleCloseComponent}>
                       ×
                     </button>
-                    <h2>Shop Component</h2>
-                    <p>Placeholder for Shop component (to be designed).</p>
+                    <Shop
+                      thumbnail="/assets/shop-placeholder.png"
+                      price={29.99}
+                      title="Premium Article"
+                      onBuyClick={() => console.log('Buy button clicked')}
+                    />
                   </div>
                 </div>
               )}
@@ -413,7 +207,6 @@ export default function Dashboard() {
           </section>
         </main>
 
-        {/* Sidebar moved outside header */}
         <div className={`${styles.sidebar} ${isSidebarOpen ? styles.sidebarOpen : ''}`}>
           <button className={styles.closeSidebar} onClick={toggleSidebar}>
             ×
@@ -426,7 +219,6 @@ export default function Dashboard() {
           </button>
         </div>
 
-        {/* Login Modal (retained but not triggered since Login button is removed) */}
         {isLoginModalOpen && (
           <div className={styles.modalOverlay}>
             <div className={styles.modal}>
@@ -463,6 +255,14 @@ export default function Dashboard() {
           </div>
         )}
       </div>
+      <style jsx>{`
+        .${styles.logo} {
+          border: none;
+          outline: none;
+          background: none;
+          padding: 0;
+        }
+      `}</style>
     </>
   );
 }

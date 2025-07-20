@@ -1,0 +1,71 @@
+/* MessageCard.module.css */
+.chatSection {
+  background: #1a1a1a;
+  padding: 2rem;
+  border-radius: 10px;
+  border: 1px solid #333;
+}
+
+.chatSection h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 1rem;
+}
+
+.chatList {
+  list-style: none;
+}
+
+.chatItem {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #333;
+  transition: background 0.3s ease;
+  cursor: pointer;
+}
+
+.chatItem:hover {
+  background: #2a2a2a;
+}
+
+.chatAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #333;
+  margin-right: 1rem;
+}
+
+.chatInfo {
+  flex: 1;
+}
+
+.chatInfo h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 0.25rem;
+}
+
+.chatInfo p {
+  font-size: 0.9rem;
+  color: #cccccc;
+}
+
+.chatTime {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .chatSection {
+    padding: 1rem;
+  }
+
+  .chatItem {
+    padding: 0.8rem;
+  }
+}

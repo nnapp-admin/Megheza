@@ -12,6 +12,78 @@
   position: relative;
 }
 
+.statusContainer {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.statusToggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 6px 12px;
+  border-radius: 20px;
+  backdrop-filter: blur(5px);
+  border: 1px solid #333;
+  z-index: 10;
+}
+
+.statusIndicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.statusIndicator.online {
+  background: #00ff00;
+  box-shadow: 0 0 8px rgba(0, 255, 0, 0.5);
+}
+
+.statusIndicator.offline {
+  background: #888;
+}
+
+.statusText {
+  font-size: 12px;
+  color: #cccccc;
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  pointer-events: none;
+  user-select: none;
+}
+
+.messageButton {
+  background: none;
+  border: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.messageButton:hover .messageIcon {
+  color: #00cccc;
+}
+
+.messageIcon {
+  width: 24px;
+  height: 24px;
+  color: #00ffff;
+}
+
 .profileHeader {
   display: flex;
   align-items: center;
@@ -98,50 +170,6 @@
   margin-bottom: 0;
 }
 
-.statusToggle {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(0, 0, 0, 0.3);
-  padding: 6px 12px;
-  border-radius: 20px;
-  backdrop-filter: blur(5px);
-  border: 1px solid #333;
-  z-index: 10;
-}
-
-.statusIndicator {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  transition: all 0.3s ease;
-  pointer-events: none;
-}
-
-.statusIndicator.online {
-  background: #00ff00;
-  box-shadow: 0 0 8px rgba(0, 255, 0, 0.5);
-}
-
-.statusIndicator.offline {
-  background: #888;
-}
-
-.statusText {
-  font-size: 12px;
-  color: #cccccc;
-  padding: 2px 4px;
-  border-radius: 4px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  pointer-events: none;
-  user-select: none;
-}
-
 .scrollReveal {
   opacity: 0;
   transform: translateY(50px);
@@ -163,14 +191,22 @@
     padding-top: 50px;
   }
 
-  .statusToggle {
+  .statusContainer {
     top: 15px;
     right: 15px;
+  }
+
+  .statusToggle {
     padding: 4px 8px;
   }
 
   .statusText {
     font-size: 11px;
+  }
+
+  .messageIcon {
+    width: 20px;
+    height: 20px;
   }
 
   .profileHeader {
