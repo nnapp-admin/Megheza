@@ -47,7 +47,7 @@
 }
 
 .buyButton {
-  background-color: #000000;
+  background-color: #910000;
   color: #fff;
   border: none;
   padding: 8px 16px;
@@ -59,7 +59,7 @@
 }
 
 .buyButton:hover {
-  background-color: #910000;
+  background-color: #000000;
 }
 
 .pdfViewer {

@@ -31,7 +31,12 @@ const MessageCard = ({ chatList }) => {
                 >
                   <div className={styles.chatAvatar}></div>
                   <div className={styles.chatInfo}>
-                    <h4>{chat.name}</h4>
+                    <div className={styles.nameWithStatus}>
+                      <h4>{chat.name}</h4>
+                      <div 
+                        className={`${styles.statusIndicator} ${chat.isOnline ? styles.online : styles.offline}`}
+                      ></div>
+                    </div>
                     <p>{chat.lastMessage}</p>
                   </div>
                   <span className={styles.chatTime}>{chat.time}</span>
@@ -100,7 +105,12 @@ const ChatWindow = ({ chat, onBack }) => {
         <button className={styles.backButton} onClick={onBack}>
           ←
         </button>
-        <h4>{chat.name}</h4>
+        <div className={styles.nameWithStatus}>
+          <h4>{chat.name}</h4>
+          <div 
+            className={`${styles.statusIndicator} ${chat.isOnline ? styles.online : styles.offline}`}
+          ></div>
+        </div>
       </div>
       <div className={styles.messageList}>
         {messages.map((msg) => (

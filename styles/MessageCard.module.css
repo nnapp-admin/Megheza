@@ -4,6 +4,11 @@
   padding: 2rem;
   border-radius: 10px;
   border: 1px solid #333;
+  height: auto; /* Dynamic height when chat window is not open */
+}
+
+.chatSection.chatWindowOpen {
+  min-height: calc(700px + 4rem); /* Apply min-height only when chat window is open */
 }
 
 .chatSection h3 {
@@ -32,6 +37,7 @@
 .chatItem {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 1rem;
   border-bottom: 1px solid #333;
   transition: background 0.3s ease;
@@ -54,28 +60,54 @@
   flex: 1;
 }
 
+.nameWithStatus {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .chatInfo h4 {
   font-size: 1rem;
   font-weight: 600;
   color: #ffffff;
-  margin-bottom: 0.25rem;
+  margin: 0;
 }
 
 .chatInfo p {
   font-size: 0.9rem;
   color: #cccccc;
+  margin-top: 0.25rem;
 }
 
 .chatTime {
   font-size: 0.8rem;
   color: #888;
+  line-height: 1;
+  align-self: center;
+}
+
+.statusIndicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.statusIndicator.online {
+  background: #00ff00;
+  box-shadow: 0 0 8px rgba(0, 255, 0, 0.5);
+}
+
+.statusIndicator.offline {
+  background: #888;
 }
 
 /* Chat Window Styles */
 .chatWindow {
   display: flex;
   flex-direction: column;
-  height: 400px;
+  height: 1000px; /* Increased height for larger screens */
   background: #2a2a2a;
   border-radius: 10px;
   overflow: hidden;
@@ -196,6 +228,11 @@
 @media (max-width: 768px) {
   .chatSection {
     padding: 1rem;
+    height: auto; /* Dynamic height for mobile when chat window is not open */
+  }
+
+  .chatSection.chatWindowOpen {
+    min-height: calc(600px + 2rem); /* Apply min-height only when chat window is open */
   }
 
   .chatItem {
@@ -203,7 +240,7 @@
   }
 
   .chatWindow {
-    height: 300px;
+    height: 700px; /* Increased height for mobile screens */
   }
 
   .messageInput {
@@ -212,5 +249,9 @@
 
   .sendButton {
     padding: 0.6rem 1rem;
+  }
+
+  .chatTime {
+    font-size: 0.7rem;
   }
 }
