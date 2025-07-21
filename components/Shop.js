@@ -14,6 +14,7 @@ const Shop = ({ thumbnail = 'https://images.unsplash.com/photo-1504711434969-e33
   const [isClient, setIsClient] = useState(false);
   const [workerError, setWorkerError] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [isPdfLoading, setIsPdfLoading] = useState(false); // New state for PDF loading
 
   const maxPages = 4; // Maximum pages to display
 
@@ -45,6 +46,7 @@ const Shop = ({ thumbnail = 'https://images.unsplash.com/photo-1504711434969-e33
   const onDocumentLoadSuccess = ({ numPages: totalPages }) => {
     console.log('Shop.js: PDF loaded successfully, total pages:', totalPages);
     setNumPages(Math.min(totalPages, maxPages)); // Limit to maxPages
+    setIsPdfLoading(false); // PDF is fully loaded
   };
 
   const handleCardClick = () => {
@@ -54,10 +56,12 @@ const Shop = ({ thumbnail = 'https://images.unsplash.com/photo-1504711434969-e33
     }
     setIsPdfViewerOpen(true);
     setCurrentPage(1); // Reset to first page when opening
+    setIsPdfLoading(true); // Start loading animation
   };
 
   const handleCloseViewer = () => {
     setIsPdfViewerOpen(false);
+    setIsPdfLoading(false); // Reset loading state
   };
 
   const handleNextPage = () => {
@@ -108,26 +112,38 @@ const Shop = ({ thumbnail = 'https://images.unsplash.com/photo-1504711434969-e33
           </button>
           <div className={styles.pdfContainer}>
             {isClient && (
-              <Document
-                file="/assets/Article.pdf"
-                onLoadSuccess={onDocumentLoadSuccess}
-                onLoadError={(error) => console.error('Shop.js: Failed to load PDF:', error)}
-                className={styles.pdfDocument}
-              >
-                <Page
-                  pageNumber={currentPage}
-                  width={pdfWidth}
-                  height={pdfHeight}
-                  renderAnnotationLayer={false}
-                  renderTextLayer={false}
-                />
-              </Document>
+              <>
+                {isPdfLoading && (
+                  <div className={styles.loadingSpinner} style={{ width: pdfWidth, height: pdfHeight }}>
+                    <div className={styles.spinner}></div>
+                  </div>
+                )}
+                <Document
+                  file="/assets/Article.pdf"
+                  onLoadSuccess={onDocumentLoadSuccess}
+                  onLoadError={(error) => {
+                    console.error('Shop.js: Failed to load PDF:', error);
+                    setIsPdfLoading(false); // Stop loading on error
+                  }}
+                  className={`${styles.pdfDocument} ${isPdfLoading ? styles.hidden : ''}`}
+                >
+                  {!isPdfLoading && (
+                    <Page
+                      pageNumber={currentPage}
+                      width={pdfWidth}
+                      height={pdfHeight}
+                      renderAnnotationLayer={false}
+                      renderTextLayer={false}
+                    />
+                  )}
+                </Document>
+              </>
             )}
             <div className={styles.pdfControls}>
               <button
                 className={styles.navButton}
                 onClick={handlePreviousPage}
-                disabled={currentPage <= 1}
+                disabled={currentPage <= 1 || isPdfLoading}
               >
                 Previous
               </button>
@@ -137,7 +153,7 @@ const Shop = ({ thumbnail = 'https://images.unsplash.com/photo-1504711434969-e33
               <button
                 className={styles.navButton}
                 onClick={handleNextPage}
-                disabled={currentPage >= Math.min(numPages || maxPages, maxPages)}
+                disabled={currentPage >= Math.min(numPages || maxPages, maxPages) || isPdfLoading}
               >
                 Next
               </button>
