@@ -1,5 +1,3 @@
-/* Existing styles remain unchanged */
-
 .shopContainer {
   display: flex;
   justify-content: center;
@@ -16,12 +14,14 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   width: 250px;
+  min-height: 300px;
   margin: 16px;
   transition: transform 0.2s ease-in-out;
   cursor: pointer;
+  position: relative;
 }
 
-.shopCard:hover {
+.shopCard hover {
   transform: translateY(-5px);
 }
 
@@ -65,14 +65,16 @@
 }
 
 .pdfViewer {
-  position: relative;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   padding: 20px;
   max-width: 700px;
   width: 100%;
-  margin: 20px;
   box-sizing: border-box;
 }
 
@@ -91,6 +93,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   width: 100%;
 }
 
@@ -140,9 +143,8 @@
 
 @media (max-width: 768px) {
   .pdfViewer {
-    max-width: 100%;
+    max-width: 354px;
     padding: 10px;
-    margin: 10px;
   }
 
   .pdfDocument {
@@ -160,7 +162,7 @@
   display: flex;
   gap: 10px;
   margin-top: 10px;
-  margin-bottom: 20px; /* Added vertical gap below PDF controls */
+  margin-bottom: 20px;
   align-items: center;
 }
 

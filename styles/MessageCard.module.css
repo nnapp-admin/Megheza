@@ -170,12 +170,12 @@
 }
 
 .message.sent .messageContent {
-  background: #8B0000;
+  background: #005c172d;
   color: #ffffff;
 }
 
 .message.received .messageContent {
-  background: #555;
+  background: #55555552;
   color: #ffffff;
 }
 
@@ -210,7 +210,7 @@
 }
 
 .sendButton {
-  background: #8B0000;
+  background: #005c17;
   color: #ffffff;
   border: none;
   padding: 0.8rem 1.5rem;

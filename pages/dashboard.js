@@ -8,53 +8,16 @@ import UserProfile from '../components/UserProfile';
 import ProfileCard from '../components/ProfileCard';
 import styles from '../styles/Dashboard.module.css';
 
-// Dynamically import Shop component with SSR disabled
-const Shop = dynamic(() => import('../components/Shop'), { ssr: false });
-
-// Continents component
-const Continents = ({ onContinentClick }) => {
-  const continents = [
-    { name: 'Africa', image: '/assets/Africa.jpg' },
-    { name: 'Antarctica', image: '/assets/Antarctica.jpg' },
-    { name: 'Asia', image: '/assets/Asia.jpg' },
-    { name: 'Australia', image: '/assets/Australia.jpg' },
-    { name: 'Europe', image: '/assets/Europe.jpg' },
-    { name: 'North America', image: '/assets/NorthAmerica.jpg' },
-    { name: 'South America', image: '/assets/SouthAmerica.jpg' },
-  ];
-
-  return (
-    <div className={styles.profileGrid}>
-      {continents.map((continent) => (
-        <div
-          key={continent.name}
-          className={styles.continentCard}
-          onClick={() => onContinentClick(continent.name)}
-        >
-          <div className={styles.thumbnailContainer}>
-            <Image
-              src={continent.image}
-              alt={`${continent.name} thumbnail`}
-              width={200}
-              height={200}
-              className={styles.thumbnail}
-            />
-          </div>
-          <div className={styles.cardContent}>
-            <h3 className={styles.title}>{continent.name}</h3>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-};
+// Dynamically import components with SSR disabled
+const ContinentsDisplay = dynamic(() => import('../components/ContinentsDisplay'), { ssr: false });
+const ContinentShop = dynamic(() => import('../components/ContinentShop'), { ssr: false });
 
 export default function Dashboard() {
   const router = useRouter();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isNetworkOpen, setIsNetworkOpen] = useState(false);
-  const [isShopOpen, setIsShopOpen] = useState(false);
-  const [isContinentsOpen, setIsContinentsOpen] = useState(false);
+  const [isContinentsDisplayOpen, setIsContinentsDisplayOpen] = useState(false);
+  const [isContinentShopOpen, setIsContinentShopOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDashboardVisible, setIsDashboardVisible] = useState(true);
   const [selectedContinent, setSelectedContinent] = useState(null);
@@ -150,34 +113,36 @@ export default function Dashboard() {
     setIsDashboardVisible(false);
     setTimeout(() => {
       setIsNetworkOpen(true);
-      setIsShopOpen(false);
-      setIsContinentsOpen(false);
+      setIsContinentsDisplayOpen(false);
+      setIsContinentShopOpen(false);
       setIsSidebarOpen(false);
+      setSelectedContinent(null);
     }, 300);
   };
 
   const handleShopClick = () => {
     setIsDashboardVisible(false);
     setTimeout(() => {
-      setIsContinentsOpen(true);
-      setIsShopOpen(false);
+      setIsContinentsDisplayOpen(true);
       setIsNetworkOpen(false);
+      setIsContinentShopOpen(false);
       setIsSidebarOpen(false);
+      setSelectedContinent(null);
     }, 300);
   };
 
   const handleContinentClick = (continentName) => {
+    setIsContinentsDisplayOpen(false);
     setSelectedContinent(continentName);
-    setIsContinentsOpen(false);
     setTimeout(() => {
-      setIsShopOpen(true);
+      setIsContinentShopOpen(true);
     }, 300);
   };
 
   const handleCloseComponent = () => {
     setIsNetworkOpen(false);
-    setIsShopOpen(false);
-    setIsContinentsOpen(false);
+    setIsContinentsDisplayOpen(false);
+    setIsContinentShopOpen(false);
     setSelectedContinent(null);
     setTimeout(() => {
       setIsDashboardVisible(true);
@@ -234,28 +199,23 @@ export default function Dashboard() {
                   </div>
                 </div>
               )}
-              {isContinentsOpen && (
+              {isContinentsDisplayOpen && (
                 <div className={styles.componentOverlay}>
                   <div className={styles.component}>
                     <button className={styles.closeButton} onClick={handleCloseComponent}>
                       ×
                     </button>
-                    <Continents onContinentClick={handleContinentClick} />
+                    <ContinentsDisplay onContinentClick={handleContinentClick} />
                   </div>
                 </div>
               )}
-              {isShopOpen && (
+              {isContinentShopOpen && (
                 <div className={styles.componentOverlay}>
                   <div className={styles.component}>
                     <button className={styles.closeButton} onClick={handleCloseComponent}>
                       ×
                     </button>
-                    <Shop
-                      thumbnail="/assets/shop-placeholder.png"
-                      price={29.99}
-                      title={`Premium Article - ${selectedContinent || 'Global'}`}
-                      onBuyClick={() => console.log(`Buy button clicked for ${selectedContinent || 'Global'}`)}
-                    />
+                    <ContinentShop continentName={selectedContinent} onClose={handleCloseComponent} />
                   </div>
                 </div>
               )}

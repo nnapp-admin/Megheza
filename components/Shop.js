@@ -7,27 +7,25 @@ import styles from '../styles/Shop.module.css';
 const Document = dynamic(() => import('react-pdf').then(mod => mod.Document), { ssr: false });
 const Page = dynamic(() => import('react-pdf').then(mod => mod.Page), { ssr: false });
 
-const Shop = ({ thumbnail = 'https://images.unsplash.com/photo-1504711434969-e33886168f5c', price = 0, title = 'Item', onBuyClick }) => {
+const Shop = ({ thumbnail = 'https://images.unsplash.com/photo-1504711434969-e33886168f5c', price = 0, title = 'Item', onBuyClick, isActive = true, isAnyPdfOpen = false, isPdfViewerRequested = false, onOpenPdf, onClosePdf }) => {
   const [isPdfViewerOpen, setIsPdfViewerOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [numPages, setNumPages] = useState(null);
   const [isClient, setIsClient] = useState(false);
   const [workerError, setWorkerError] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
-  const [isPdfLoading, setIsPdfLoading] = useState(false); // New state for PDF loading
+  const [isPdfLoading, setIsPdfLoading] = useState(false);
 
-  const maxPages = 4; // Maximum pages to display
+  const maxPages = 4;
 
-  // Set up client-side check, PDF worker, and screen size detection
   useEffect(() => {
     console.log('Shop.js: Running in browser:', typeof window !== 'undefined');
     setIsClient(true);
 
-    // Detect screen size
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);
     };
-    handleResize(); // Initial check
+    handleResize();
     window.addEventListener('resize', handleResize);
 
     if (typeof window !== 'undefined') {
@@ -43,10 +41,18 @@ const Shop = ({ thumbnail = 'https://images.unsplash.com/photo-1504711434969-e33
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  useEffect(() => {
+    if (isPdfViewerRequested && !isPdfViewerOpen && isAnyPdfOpen) {
+      handleCardClick();
+    } else if (!isPdfViewerRequested && isPdfViewerOpen) {
+      handleCloseViewer();
+    }
+  }, [isPdfViewerRequested, isAnyPdfOpen]);
+
   const onDocumentLoadSuccess = ({ numPages: totalPages }) => {
     console.log('Shop.js: PDF loaded successfully, total pages:', totalPages);
-    setNumPages(Math.min(totalPages, maxPages)); // Limit to maxPages
-    setIsPdfLoading(false); // PDF is fully loaded
+    setNumPages(Math.min(totalPages, maxPages));
+    setIsPdfLoading(false);
   };
 
   const handleCardClick = () => {
@@ -55,13 +61,15 @@ const Shop = ({ thumbnail = 'https://images.unsplash.com/photo-1504711434969-e33
       return;
     }
     setIsPdfViewerOpen(true);
-    setCurrentPage(1); // Reset to first page when opening
-    setIsPdfLoading(true); // Start loading animation
+    setCurrentPage(1);
+    setIsPdfLoading(true);
+    if (onOpenPdf) onOpenPdf();
   };
 
   const handleCloseViewer = () => {
     setIsPdfViewerOpen(false);
-    setIsPdfLoading(false); // Reset loading state
+    setIsPdfLoading(false);
+    if (onClosePdf) onClosePdf();
   };
 
   const handleNextPage = () => {
@@ -76,9 +84,10 @@ const Shop = ({ thumbnail = 'https://images.unsplash.com/photo-1504711434969-e33
     }
   };
 
-  // Set PDF dimensions based on screen size
   const pdfWidth = isMobile ? 354 : 566;
   const pdfHeight = isMobile ? 500 : 800;
+
+  if (!isActive && isAnyPdfOpen && isPdfViewerOpen) return null;
 
   return (
     <div className={styles.shopContainer}>
@@ -123,7 +132,7 @@ const Shop = ({ thumbnail = 'https://images.unsplash.com/photo-1504711434969-e33
                   onLoadSuccess={onDocumentLoadSuccess}
                   onLoadError={(error) => {
                     console.error('Shop.js: Failed to load PDF:', error);
-                    setIsPdfLoading(false); // Stop loading on error
+                    setIsPdfLoading(false);
                   }}
                   className={`${styles.pdfDocument} ${isPdfLoading ? styles.hidden : ''}`}
                 >
