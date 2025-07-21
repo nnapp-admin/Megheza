@@ -2,19 +2,62 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
 import MessageCard from '../components/MessageCard';
 import UserProfile from '../components/UserProfile';
 import ProfileCard from '../components/ProfileCard';
-import Shop from '../components/Shop';
 import styles from '../styles/Dashboard.module.css';
+
+// Dynamically import Shop component with SSR disabled
+const Shop = dynamic(() => import('../components/Shop'), { ssr: false });
+
+// Continents component
+const Continents = ({ onContinentClick }) => {
+  const continents = [
+    { name: 'Africa', image: '/assets/Africa.jpg' },
+    { name: 'Antarctica', image: '/assets/Antarctica.jpg' },
+    { name: 'Asia', image: '/assets/Asia.jpg' },
+    { name: 'Australia', image: '/assets/Australia.jpg' },
+    { name: 'Europe', image: '/assets/Europe.jpg' },
+    { name: 'North America', image: '/assets/NorthAmerica.jpg' },
+    { name: 'South America', image: '/assets/SouthAmerica.jpg' },
+  ];
+
+  return (
+    <div className={styles.profileGrid}>
+      {continents.map((continent) => (
+        <div
+          key={continent.name}
+          className={styles.continentCard}
+          onClick={() => onContinentClick(continent.name)}
+        >
+          <div className={styles.thumbnailContainer}>
+            <Image
+              src={continent.image}
+              alt={`${continent.name} thumbnail`}
+              width={200}
+              height={200}
+              className={styles.thumbnail}
+            />
+          </div>
+          <div className={styles.cardContent}>
+            <h3 className={styles.title}>{continent.name}</h3>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 export default function Dashboard() {
   const router = useRouter();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isNetworkOpen, setIsNetworkOpen] = useState(false);
   const [isShopOpen, setIsShopOpen] = useState(false);
+  const [isContinentsOpen, setIsContinentsOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDashboardVisible, setIsDashboardVisible] = useState(true);
+  const [selectedContinent, setSelectedContinent] = useState(null);
 
   const [user, setUser] = useState({
     name: 'Alex Rivera',
@@ -108,6 +151,7 @@ export default function Dashboard() {
     setTimeout(() => {
       setIsNetworkOpen(true);
       setIsShopOpen(false);
+      setIsContinentsOpen(false);
       setIsSidebarOpen(false);
     }, 300);
   };
@@ -115,15 +159,26 @@ export default function Dashboard() {
   const handleShopClick = () => {
     setIsDashboardVisible(false);
     setTimeout(() => {
-      setIsShopOpen(true);
+      setIsContinentsOpen(true);
+      setIsShopOpen(false);
       setIsNetworkOpen(false);
       setIsSidebarOpen(false);
+    }, 300);
+  };
+
+  const handleContinentClick = (continentName) => {
+    setSelectedContinent(continentName);
+    setIsContinentsOpen(false);
+    setTimeout(() => {
+      setIsShopOpen(true);
     }, 300);
   };
 
   const handleCloseComponent = () => {
     setIsNetworkOpen(false);
     setIsShopOpen(false);
+    setIsContinentsOpen(false);
+    setSelectedContinent(null);
     setTimeout(() => {
       setIsDashboardVisible(true);
     }, 300);
@@ -139,15 +194,6 @@ export default function Dashboard() {
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Journalist Dashboard - The Megheza</title>
-        <link
-          rel="preload"
-          as="style"
-          href="https://fonts.googleapis.com/css2?family=Helvetica:wght@400;500;600;700;800&display=swap"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Helvetica:wght@400;500;600;700;800&display=swap"
-          rel="stylesheet"
-        />
       </Head>
       <div className={styles.pageWrapper}>
         <header className={styles.header}>
@@ -161,7 +207,7 @@ export default function Dashboard() {
                 Network
               </button>
               <button className={styles.headerButton} onClick={handleShopClick}>
-                Shop
+                Resources
               </button>
             </div>
             <button className={styles.hamburger} onClick={toggleSidebar}>
@@ -188,6 +234,16 @@ export default function Dashboard() {
                   </div>
                 </div>
               )}
+              {isContinentsOpen && (
+                <div className={styles.componentOverlay}>
+                  <div className={styles.component}>
+                    <button className={styles.closeButton} onClick={handleCloseComponent}>
+                      ×
+                    </button>
+                    <Continents onContinentClick={handleContinentClick} />
+                  </div>
+                </div>
+              )}
               {isShopOpen && (
                 <div className={styles.componentOverlay}>
                   <div className={styles.component}>
@@ -197,8 +253,8 @@ export default function Dashboard() {
                     <Shop
                       thumbnail="/assets/shop-placeholder.png"
                       price={29.99}
-                      title="Premium Article"
-                      onBuyClick={() => console.log('Buy button clicked')}
+                      title={`Premium Article - ${selectedContinent || 'Global'}`}
+                      onBuyClick={() => console.log(`Buy button clicked for ${selectedContinent || 'Global'}`)}
                     />
                   </div>
                 </div>
@@ -215,7 +271,7 @@ export default function Dashboard() {
             Network
           </button>
           <button className={styles.sidebarButton} onClick={handleShopClick}>
-            Shop
+            Resources
           </button>
         </div>
 

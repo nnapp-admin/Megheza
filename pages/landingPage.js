@@ -196,7 +196,7 @@ export default function LandingPage() {
                 </ul>
               </div>
               <div className="footer-section">
-                <h3>Global Consortium</h3>
+                <h3>Consortium</h3>
                 <ul>
                   <li><a href="#">Guidelines</a></li>
                   <li><a href="#">Ethics Code</a></li>
@@ -206,7 +206,7 @@ export default function LandingPage() {
               </div>
             </div>
             <div className="footer-bottom">
-              <p>Copyright © 2025 The Megheza. All Rights Reserved.</p>
+              <p>Copyright © 2025 Megheza. All Rights Reserved.</p>
             </div>
           </div>
         </footer>
