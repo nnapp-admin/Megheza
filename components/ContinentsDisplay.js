@@ -10,6 +10,7 @@ const ContinentsDisplay = ({ onContinentClick }) => {
     { name: 'Europe', image: '/assets/Europe.jpg' },
     { name: 'North America', image: '/assets/NorthAmerica.jpg' },
     { name: 'South America', image: '/assets/SouthAmerica.jpg' },
+    { name: 'Add your own', image: '/assets/shop-placeholder.png' },
   ];
 
   return (
@@ -18,7 +19,7 @@ const ContinentsDisplay = ({ onContinentClick }) => {
         <div
           key={continent.name}
           className={styles.continentCard}
-          onClick={() => onContinentClick(continent.name)}
+          onClick={continent.name !== 'Add your own' ? () => onContinentClick(continent.name) : undefined}
         >
           <div className={styles.thumbnailContainer}>
             <Image
