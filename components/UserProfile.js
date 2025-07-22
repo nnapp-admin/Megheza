@@ -42,17 +42,13 @@ export default function UserProfile({ user, setUser }) {
     setEditMode(null);
   };
 
-  const toggleOnlineStatus = () => {
-    setUser(prev => ({ ...prev, isOnline: !prev.isOnline }));
-  };
-
   return (
     <div className={`${styles.profileSection} scroll-reveal`}>
       <div className={styles.statusToggle}>
         <div 
           className={`${styles.statusIndicator} ${user.isOnline ? styles.online : styles.offline}`}
         ></div>
-        <span className={styles.statusText} onClick={toggleOnlineStatus}>
+        <span className={styles.statusText}>
           {user.isOnline ? 'Online' : 'Offline'}
         </span>
       </div>
