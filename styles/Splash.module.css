@@ -17,7 +17,7 @@
   max-width: 300px; /* Adjust size as needed */
   width: 100%;
   height: auto;
-  margin-bottom: 2rem;
+  margin-bottom: 4rem; /* Increased from 2rem to 4rem for larger gap */
   cursor: pointer;
   transition: all 0.3s ease;
   transform: translateY(-2px);
@@ -36,15 +36,40 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   line-height: 1.3;
+  display: inline-block; /* Ensure cursor stays close to text */
+}
+
+.cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.2rem;
+  background: #ffffff;
+  animation: blink 0.75s step-end infinite;
+  vertical-align: middle;
+  margin-left: 2px;
+}
+
+@keyframes blink {
+  from, to {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
   .logo {
     max-width: 200px;
+    margin-bottom: 3rem; /* Adjusted for smaller screens */
   }
 
   .tagline {
     font-size: 1.2rem; /* Reduced from 1.5rem */
+  }
+
+  .cursor {
+    height: 1rem; /* Adjust cursor size for smaller screens */
   }
 }
