@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import styles from '../styles/MessageCard.module.css';
 
-const MessageCard = ({ chatList }) => {
-  const [selectedChat, setSelectedChat] = useState(null);
-
+const MessageCard = ({ chatList, selectedChat, setSelectedChat }) => {
   const handleChatSelect = (chat) => {
     setSelectedChat(chat);
   };

@@ -14,9 +14,9 @@ export default function RegisterPage() {
     otherRole: '',
     mediaAffiliation: '',
     portfolio: '',
-    publishedWork1: '',
-    publishedWork2: '',
-    publishedWorkAdditional: '',
+    domainContribution1: '',
+    domainContribution2: '',
+    domainContributionAdditional: '',
     pressCard: null,
     recognition: '',
     subjects: '',
@@ -35,6 +35,7 @@ export default function RegisterPage() {
 
   const handleInputChange = (e) => {
     const { name, value, type, checked, files } = e.target;
+    if (type !== 'file' && type !== 'checkbox' && value.length > 500) return; // Limit to 500 characters
     setFormData((prev) => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : type === 'file' ? files[0] : value,
@@ -88,13 +89,12 @@ export default function RegisterPage() {
       if (!formData.fullName) newErrors.fullName = 'Full Name is required';
       if (!formData.email) newErrors.email = 'Email Address is required';
       if (!formData.location) newErrors.location = 'Location is required';
-      if (!formData.profilePicture) newErrors.profilePicture = 'Profile Picture is required';
     } else if (currentStep === 2) {
       if (!formData.primaryRole) newErrors.primaryRole = 'Primary Role is required';
       if (formData.primaryRole === 'Other' && !formData.otherRole)
         newErrors.otherRole = 'Please specify your role';
-      if (!formData.publishedWork1) newErrors.publishedWork1 = 'First published work link is required';
-      if (!formData.publishedWork2) newErrors.publishedWork2 = 'Second published work link is required';
+      if (!formData.domainContribution1) newErrors.domainContribution1 = 'First domain contribution link is required';
+      if (!formData.domainContribution2) newErrors.domainContribution2 = 'Second domain contribution link is required';
     } else if (currentStep === 3) {
       if (!formData.recognition) newErrors.recognition = 'This field is required';
       if (!formData.subjects) newErrors.subjects = 'This field is required';
@@ -205,7 +205,7 @@ export default function RegisterPage() {
                       {errors.fullName && <p className={styles.error}>{errors.fullName}</p>}
                     </div>
                     <div className={styles.formGroup}>
-                      <label htmlFor="profilePicture">Profile Picture (Required)</label>
+                      <label htmlFor="profilePicture">Profile Picture (Optional, recommended size: 200x200px)</label>
                       <input
                         type="file"
                         id="profilePicture"
@@ -244,7 +244,7 @@ export default function RegisterPage() {
                         placeholder="Enter your email"
                         value={formData.email}
                         onChange={handleInputChange}
-                        required выбирать
+                        required
                       />
                       {errors.email && <p className={styles.error}>{errors.email}</p>}
                     </div>
@@ -353,30 +353,30 @@ export default function RegisterPage() {
                       />
                     </div>
                     <div className={styles.formGroup}>
-                      <label>Published Work (Minimum of 2)</label>
+                      <label>Domain Contribution Links (Minimum of 2)</label>
                       <input
                         type="url"
-                        name="publishedWork1"
-                        placeholder="Link to published work 1"
-                        value={formData.publishedWork1}
+                        name="domainContribution1"
+                        placeholder="Link"
+                        value={formData.domainContribution1}
                         onChange={handleInputChange}
                         required
                       />
-                      {errors.publishedWork1 && <p className={styles.error}>{errors.publishedWork1}</p>}
+                      {errors.domainContribution1 && <p className={styles.error}>{errors.domainContribution1}</p>}
                       <input
                         type="url"
-                        name="publishedWork2"
-                        placeholder="Link to published work 2"
-                        value={formData.publishedWork2}
+                        name="domainContribution2"
+                        placeholder="Link"
+                        value={formData.domainContribution2}
                         onChange={handleInputChange}
                         required
                       />
-                      {errors.publishedWork2 && <p className={styles.error}>{errors.publishedWork2}</p>}
+                      {errors.domainContribution2 && <p className={styles.error}>{errors.domainContribution2}</p>}
                       <input
                         type="url"
-                        name="publishedWorkAdditional"
+                        name="domainContributionAdditional"
                         placeholder="Additional link (optional)"
-                        value={formData.publishedWorkAdditional}
+                        value={formData.domainContributionAdditional}
                         onChange={handleInputChange}
                       />
                     </div>
@@ -429,10 +429,11 @@ export default function RegisterPage() {
                       <textarea
                         id="recognition"
                         name="recognition"
-                        placeholder="Provide a brief statement about your professional identity"
+                        placeholder="Provide a brief statement that reflects your professional identity and journalistic approach."
                         value={formData.recognition}
                         onChange={handleInputChange}
                         required
+                        maxLength={500}
                       ></textarea>
                       {errors.recognition && <p className={styles.error}>{errors.recognition}</p>}
                     </div>
@@ -441,10 +442,11 @@ export default function RegisterPage() {
                       <textarea
                         id="subjects"
                         name="subjects"
-                        placeholder="e.g., politics, environment, technology"
+                        placeholder="Examples: politics, environment, technology, social justice, gender, conflict, culture, etc."
                         value={formData.subjects}
                         onChange={handleInputChange}
                         required
+                        maxLength={500}
                       ></textarea>
                       {errors.subjects && <p className={styles.error}>{errors.subjects}</p>}
                     </div>
@@ -453,10 +455,11 @@ export default function RegisterPage() {
                       <textarea
                         id="motivation"
                         name="motivation"
-                        placeholder="Share your inspiration or turning point"
+                        placeholder="Share a short paragraph outlining the inspiration or turning point that led you to this field."
                         value={formData.motivation}
                         onChange={handleInputChange}
                         required
+                        maxLength={500}
                       ></textarea>
                       {errors.motivation && <p className={styles.error}>{errors.motivation}</p>}
                     </div>
@@ -477,10 +480,11 @@ export default function RegisterPage() {
                       <input
                         type="text"
                         name="affiliationDetails"
-                        placeholder="Specify if Yes"
+                        placeholder="Yes (please specify)"
                         value={formData.affiliationDetails}
                         onChange={handleInputChange}
                         className={styles.otherInput}
+                        maxLength={500}
                       />
                       {errors.affiliation && <p className={styles.error}>{errors.affiliation}</p>}
                       {errors.affiliationDetails && <p className={styles.error}>{errors.affiliationDetails}</p>}
@@ -490,20 +494,24 @@ export default function RegisterPage() {
                       <textarea
                         id="reason"
                         name="reason"
-                        placeholder="Explain what you hope to gain or contribute"
+                        placeholder="Explain briefly what you hope to gain or contribute."
                         value={formData.reason}
                         onChange={handleInputChange}
                         required
+                        maxLength={500}
                       ></textarea>
                       {errors.reason && <p className={styles.error}>{errors.reason}</p>}
                     </div>
                     <div className={styles.formGroup}>
-                      <label htmlFor="videoSubmission">Video Submission Link (Optional)</label>
+                      <label htmlFor="videoSubmission">
+                        (Optional) Submit a short video (1–2 minutes) introducing yourself and your intent for joining.
+                        This may include your background, values, or vision for how you intend to use this platform. Upload to Google Drive, Dropbox, or YouTube and provide the link below.
+                      </label>
                       <input
                         type="url"
                         id="videoSubmission"
                         name="videoSubmission"
-                        placeholder="Link to 1–2 minute introduction video"
+                        placeholder="Video Submission Link"
                         value={formData.videoSubmission}
                         onChange={handleInputChange}
                       />

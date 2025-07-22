@@ -21,6 +21,7 @@ export default function Dashboard() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDashboardVisible, setIsDashboardVisible] = useState(true);
   const [selectedContinent, setSelectedContinent] = useState(null);
+  const [selectedChat, setSelectedChat] = useState(null);
 
   const [user, setUser] = useState({
     name: 'Alex Rivera',
@@ -31,9 +32,48 @@ export default function Dashboard() {
   });
 
   const [chatList] = useState([
-    { id: 1, name: 'John Smith', lastMessage: 'Hey, check out this story...', time: '10:30 AM' },
-    { id: 2, name: 'Emma Wilson', lastMessage: 'Can we discuss the article?', time: 'Yesterday' },
-    { id: 3, name: 'Global News Group', lastMessage: 'New assignment posted', time: '2 days ago' },
+    { id: 1, name: 'John Smith', lastMessage: 'Hey, check out this story...', time: '10:30 AM', isOnline: true },
+    { id: 2, name: 'Emma Wilson', lastMessage: 'Can we discuss the article?', time: 'Yesterday', isOnline: false },
+    { id: 3, name: 'Global News Group', lastMessage: 'New assignment posted', time: '2 days ago', isOnline: true },
+  ]);
+
+  // Sample network users for profile cards, including users not in chatList
+  const [networkUsers] = useState([
+    {
+      name: 'John Smith',
+      profession: 'Freelance Journalist',
+      bio: 'Passionate about uncovering hidden stories.',
+      profilePic: '/assets/profile-placeholder.png',
+      isOnline: true,
+    },
+    {
+      name: 'Emma Wilson',
+      profession: 'Editor',
+      bio: 'Helping shape narratives that matter.',
+      profilePic: '/assets/profile-placeholder.png',
+      isOnline: false,
+    },
+    {
+      name: 'Sarah Lee',
+      profession: 'Photojournalist',
+      bio: 'Capturing the world one frame at a time.',
+      profilePic: '/assets/profile-placeholder.png',
+      isOnline: true,
+    },
+    {
+      name: 'Michael Chen',
+      profession: 'Investigative Reporter',
+      bio: 'Digging deep into stories that impact lives.',
+      profilePic: '/assets/profile-placeholder.png',
+      isOnline: false,
+    },
+    {
+      name: 'Aisha Khan',
+      profession: 'Columnist',
+      bio: 'Writing to inspire change and spark dialogue.',
+      profilePic: '/assets/profile-placeholder.png',
+      isOnline: true,
+    },
   ]);
 
   useEffect(() => {
@@ -117,6 +157,7 @@ export default function Dashboard() {
       setIsContinentShopOpen(false);
       setIsSidebarOpen(false);
       setSelectedContinent(null);
+      setSelectedChat(null);
     }, 300);
   };
 
@@ -128,6 +169,7 @@ export default function Dashboard() {
       setIsContinentShopOpen(false);
       setIsSidebarOpen(false);
       setSelectedContinent(null);
+      setSelectedChat(null);
     }, 300);
   };
 
@@ -144,9 +186,23 @@ export default function Dashboard() {
     setIsContinentsDisplayOpen(false);
     setIsContinentShopOpen(false);
     setSelectedContinent(null);
+    setSelectedChat(null);
     setTimeout(() => {
       setIsDashboardVisible(true);
     }, 300);
+  };
+
+  const handleMessageClick = (user) => {
+    const chat = chatList.find((c) => c.name === user.name) || {
+      id: chatList.length + 1,
+      name: user.name,
+      lastMessage: '',
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      isOnline: user.isOnline,
+    };
+    setSelectedChat(chat);
+    setIsNetworkOpen(false);
+    setIsDashboardVisible(true);
   };
 
   const toggleSidebar = () => {
@@ -186,7 +242,7 @@ export default function Dashboard() {
             <div className={styles.container}>
               <div className={`${styles.dashboardContent} ${isDashboardVisible ? styles.visible : styles.hidden}`}>
                 <UserProfile user={user} setUser={setUser} />
-                <MessageCard chatList={chatList} />
+                <MessageCard chatList={chatList} selectedChat={selectedChat} setSelectedChat={setSelectedChat} />
               </div>
 
               {isNetworkOpen && (
@@ -195,7 +251,16 @@ export default function Dashboard() {
                     <button className={styles.closeButton} onClick={handleCloseComponent}>
                       ×
                     </button>
-                    <ProfileCard initialUserData={user} isRevealed={true} />
+                    <div className={styles.networkList}>
+                      {networkUsers.map((networkUser, index) => (
+                        <ProfileCard
+                          key={index}
+                          initialUserData={networkUser}
+                          isRevealed={true}
+                          onMessageClick={() => handleMessageClick(networkUser)}
+                        />
+                      ))}
+                    </div>
                   </div>
                 </div>
               )}
@@ -277,6 +342,13 @@ export default function Dashboard() {
           outline: none;
           background: none;
           padding: 0;
+        }
+        .${styles.networkList} {
+          display: grid;
+          gap: 1rem;
+          max-height: 80vh;
+          overflow-y: auto;
+          padding: 1rem;
         }
       `}</style>
     </>
