@@ -2,8 +2,40 @@ import { useState, useRef } from 'react';
 import Head from 'next/head';
 import styles from '../styles/Register.module.css';
 
+// Define questions for each section
+const questions = [
+  // Section 1: Personal Information
+  { section: 1, name: 'fullName', label: 'Full Name (Required)', type: 'text', placeholder: 'Enter your full legal name', required: true },
+  { section: 1, name: 'profilePicture', label: 'Profile Picture (Optional, recommended size: 200x200px)', type: 'file', accept: 'image/*' },
+  { section: 1, name: 'email', label: 'Email Address (Required)', type: 'email', placeholder: 'Enter your email', required: true },
+  { section: 1, name: 'location', label: 'Location (City, Country) (Required)', type: 'text', placeholder: 'Enter your current city and country', required: true },
+  { section: 1, name: 'languages', label: 'Languages You Report In', type: 'text', placeholder: 'List languages used professionally' },
+  { section: 1, name: 'pronouns', label: 'Preferred Pronouns (Optional)', type: 'text', placeholder: 'e.g., she/her, he/him, they/them' },
+  // Section 2: Journalism Credentials
+  { section: 2, name: 'primaryRole', label: 'Primary Role (Required)', type: 'role', required: true },
+  { section: 2, name: 'mediaAffiliation', label: 'Current Media Affiliation(s)', type: 'text', placeholder: 'Enter media organization or "Freelance"' },
+  { section: 2, name: 'portfolio', label: 'Official Website or Portfolio (Optional)', type: 'url', placeholder: 'Enter your professional website or portfolio link' },
+  { section: 2, name: 'domainContribution1', label: 'Domain Contribution Link 1 (Required)', type: 'url', placeholder: 'Link', required: true },
+  { section: 2, name: 'domainContribution2', label: 'Domain Contribution Link 2 (Required)', type: 'url', placeholder: 'Link', required: true },
+  { section: 2, name: 'domainContributionAdditional', label: 'Additional Domain Contribution Link (Optional)', type: 'url', placeholder: 'Additional link (optional)' },
+  { section: 2, name: 'pressCard', label: 'Press Card / Journalist ID Upload (Optional)', type: 'file', accept: 'image/*,.pdf' },
+  // Section 3: Verification Questions
+  { section: 3, name: 'recognition', label: 'How would you like to be recognized as a journalist?', type: 'textarea', placeholder: 'Provide a brief statement that reflects your professional identity and journalistic approach.', required: true, maxLength: 500 },
+  { section: 3, name: 'subjects', label: 'What subjects or areas do you primarily report on?', type: 'textarea', placeholder: 'Examples: politics, environment, technology, social justice, gender, conflict, culture, etc.', required: true, maxLength: 500 },
+  { section: 3, name: 'motivation', label: 'What motivated you to pursue a career in journalism?', type: 'textarea', placeholder: 'Share a short paragraph outlining the inspiration or turning point that led you to this field.', required: true, maxLength: 500 },
+  { section: 3, name: 'affiliation', label: 'Have you been affiliated with any newsroom, media outlet, or journalist association?', type: 'affiliation', required: true },
+  { section: 3, name: 'affiliationDetails', label: 'Affiliation Details (if Yes)', type: 'text', placeholder: 'Yes (please specify)', conditional: (formData) => formData.affiliation === 'Yes', maxLength: 500 },
+  { section: 3, name: 'reason', label: 'What is your reason for seeking access to this verified space?', type: 'textarea', placeholder: 'Explain briefly what you hope to gain or contribute.', required: true, maxLength: 500 },
+  { section: 3, name: 'videoSubmission', label: '(Optional) Submit a short video (1–2 minutes) introducing yourself and your intent for joining. This may include your background, values, or vision for how you intend to use this platform. Upload to Google Drive, Dropbox, or YouTube and provide the link below.', type: 'url', placeholder: 'Video Submission Link' },
+  // Section 4: Self-Declaration
+  { section: 4, name: 'selfDeclaration', label: 'Self-Declaration', type: 'checkbox', required: true, text: 'I hereby confirm that I am an active, working journalist. I acknowledge that this platform is intended exclusively for verified media professionals and understand that all submitted information will undergo manual review. I accept that if my application is not approved, all associated data will be securely deleted. I further understand that any false, misleading, or unverifiable claims may result in permanent disqualification from access. I agree to uphold the principles of integrity, accuracy, and professional respect in all interactions within this space.' },
+];
+
+// Total number of questions
+const totalQuestions = questions.length;
+
 export default function RegisterPage() {
-  const [step, setStep] = useState(0); // Tracks current step (0: Intro, 1-4: Sections, 5: Submission)
+  const [step, setStep] = useState(0); // Tracks current question index (0: Intro, 1 to totalQuestions: Questions, totalQuestions + 1: Submission)
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -83,35 +115,27 @@ export default function RegisterPage() {
     }
   };
 
-  const validateSection = (currentStep) => {
+  const validateQuestion = (question) => {
     const newErrors = {};
-    if (currentStep === 1) {
-      if (!formData.fullName) newErrors.fullName = 'Full Name is required';
-      if (!formData.email) newErrors.email = 'Email Address is required';
-      if (!formData.location) newErrors.location = 'Location is required';
-    } else if (currentStep === 2) {
-      if (!formData.primaryRole) newErrors.primaryRole = 'Primary Role is required';
-      if (formData.primaryRole === 'Other' && !formData.otherRole)
-        newErrors.otherRole = 'Please specify your role';
-      if (!formData.domainContribution1) newErrors.domainContribution1 = 'First domain contribution link is required';
-      if (!formData.domainContribution2) newErrors.domainContribution2 = 'Second domain contribution link is required';
-    } else if (currentStep === 3) {
-      if (!formData.recognition) newErrors.recognition = 'This field is required';
-      if (!formData.subjects) newErrors.subjects = 'This field is required';
-      if (!formData.motivation) newErrors.motivation = 'This field is required';
-      if (!formData.affiliation) newErrors.affiliation = 'Please select an option';
-      if (formData.affiliation === 'Yes' && !formData.affiliationDetails)
-        newErrors.affiliationDetails = 'Please specify affiliation details';
-      if (!formData.reason) newErrors.reason = 'This field is required';
-    } else if (currentStep === 4) {
-      if (!formData.selfDeclaration) newErrors.selfDeclaration = 'You must agree to the self-declaration';
+    const { name, required, conditional } = question;
+
+    // Skip validation if the question is conditional and the condition is not met
+    if (conditional && !conditional(formData)) return true;
+
+    if (required && !formData[name]) {
+      newErrors[name] = `${question.label} is required`;
+    } else if (name === 'primaryRole' && formData.primaryRole === 'Other' && !formData.otherRole) {
+      newErrors.otherRole = 'Please specify your role';
+    } else if (name === 'affiliationDetails' && formData.affiliation === 'Yes' && !formData.affiliationDetails) {
+      newErrors.affiliationDetails = 'Please specify affiliation details';
     }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleNext = () => {
-    if (step === 0 || validateSection(step)) {
+    if (step === 0 || (step <= totalQuestions && validateQuestion(questions[step - 1]))) {
       setStep((prev) => prev + 1);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -124,9 +148,209 @@ export default function RegisterPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (validateSection(4)) {
+    // Validate all questions
+    const newErrors = {};
+    questions.forEach((question) => {
+      if (question.conditional && !question.conditional(formData)) return;
+      if (question.required && !formData[question.name]) {
+        newErrors[question.name] = `${question.label} is required`;
+      }
+      if (question.name === 'primaryRole' && formData.primaryRole === 'Other' && !formData.otherRole) {
+        newErrors.otherRole = 'Please specify your role';
+      }
+      if (question.name === 'affiliationDetails' && formData.affiliation === 'Yes' && !formData.affiliationDetails) {
+        newErrors.affiliationDetails = 'Please specify affiliation details';
+      }
+    });
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length === 0) {
       console.log('Registration submitted:', formData);
-      // Replace with backend API call (e.g., fetch or axios) as needed
+      // Replace with backend API call as needed
+    } else {
+      // Jump to the first question with an error
+      const firstErrorQuestion = questions.find((q) => newErrors[q.name] || (q.name === 'primaryRole' && newErrors.otherRole));
+      if (firstErrorQuestion) {
+        const errorIndex = questions.indexOf(firstErrorQuestion) + 1;
+        setStep(errorIndex);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+  };
+
+  const renderQuestion = (question) => {
+    const { name, label, type, placeholder, accept, required, maxLength, text } = question;
+
+    if (question.conditional && !question.conditional(formData)) {
+      return (
+        <div className={styles.formGroup}>
+          <p className={styles.note}>This field will appear when the condition is met (e.g., select "Yes" for affiliation).</p>
+        </div>
+      ); // Debug message for conditional fields
+    }
+
+    switch (type) {
+      case 'text':
+      case 'email':
+      case 'url':
+        return (
+          <div className={styles.formGroup}>
+            <label htmlFor={name}>{label}</label>
+            <input
+              type={type}
+              id={name}
+              name={name}
+              placeholder={placeholder}
+              value={formData[name]}
+              onChange={handleInputChange}
+              required={required}
+              maxLength={maxLength}
+            />
+            {errors[name] && <p className={styles.error}>{errors[name]}</p>}
+          </div>
+        );
+      case 'textarea':
+        return (
+          <div className={styles.formGroup}>
+            <label htmlFor={name}>{label}</label>
+            <textarea
+              id={name}
+              name={name}
+              placeholder={placeholder}
+              value={formData[name]}
+              onChange={handleInputChange}
+              required={required}
+              maxLength={maxLength}
+            ></textarea>
+            {errors[name] && <p className={styles.error}>{errors[name]}</p>}
+          </div>
+        );
+      case 'file':
+        return (
+          <div className={styles.formGroup}>
+            <label htmlFor={name}>{label}</label>
+            <input
+              type="file"
+              id={name}
+              name={name}
+              accept={accept}
+              className={styles.fileInput}
+              onChange={name === 'profilePicture' ? handleImageChange : handleInputChange}
+              ref={name === 'profilePicture' ? fileInputRef : pressCardInputRef}
+            />
+            {name === 'profilePicture' ? (
+              <div className={styles.profileCard}>
+                {previewImage ? (
+                  <>
+                    <img src={previewImage} alt="Profile Preview" className={styles.previewImage} />
+                    <button type="button" className={styles.removeButton} onClick={handleRemoveImage}>
+                      ×
+                    </button>
+                  </>
+                ) : (
+                  <label htmlFor={name} className={styles.customFileUpload}>
+                    📤 Upload Profile Picture
+                  </label>
+                )}
+              </div>
+            ) : (
+              <div className={styles.uploadContainer}>
+                {formData.pressCard ? (
+                  <div className={styles.uploadedFileContainer}>
+                    <span className={styles.uploadedFileName}>{formData.pressCard.name}</span>
+                    <button type="button" className={styles.removeButton} onClick={handleRemovePressCard}>
+                      ×
+                    </button>
+                  </div>
+                ) : (
+                  <label htmlFor={name} className={styles.customFileUpload}>
+                    📤 Upload Press Card / ID
+                  </label>
+                )}
+              </div>
+            )}
+            {errors[name] && <p className={styles.error}>{errors[name]}</p>}
+          </div>
+        );
+      case 'role':
+        return (
+          <div className={styles.formGroup}>
+            <label>{label}</label>
+            <div className={styles.roleGroup}>
+              {[
+                'Reporter',
+                'Editor',
+                'Correspondent',
+                'Investigative Journalist',
+                'Freelance Journalist',
+                'Photo/Video Journalist',
+                'Other',
+              ].map((role) => (
+                <button
+                  key={role}
+                  type="button"
+                  className={`${styles.roleButton} ${formData.primaryRole === role ? styles.selected : ''}`}
+                  onClick={() => handleRoleSelect(role)}
+                >
+                  {role}
+                </button>
+              ))}
+            </div>
+            {formData.primaryRole === 'Other' && (
+              <input
+                type="text"
+                name="otherRole"
+                placeholder="Specify if Other"
+                value={formData.otherRole}
+                onChange={handleInputChange}
+                className={styles.otherInput}
+                maxLength={500}
+              />
+            )}
+            {errors.primaryRole && <p className={styles.error}>{errors.primaryRole}</p>}
+            {errors.otherRole && <p className={styles.error}>{errors.otherRole}</p>}
+          </div>
+        );
+      case 'affiliation':
+        return (
+          <div className={styles.formGroup}>
+            <label>{label}</label>
+            <div className={styles.roleGroup}>
+              {['Yes', 'No'].map((option) => (
+                <button
+                  key={option}
+                  type="button"
+                  className={`${styles.roleButton} ${formData.affiliation === option ? styles.selected : ''}`}
+                  onClick={() => handleAffiliationSelect(option)}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+            {errors[name] && <p className={styles.error}>{errors[name]}</p>}
+          </div>
+        );
+      case 'checkbox':
+        return (
+          <div className={styles.formGroup}>
+            <label className={styles.checkboxLabel}>
+              <input
+                type="checkbox"
+                name={name}
+                checked={formData[name]}
+                onChange={handleInputChange}
+                required={required}
+              />
+              {text}
+            </label>
+            {errors[name] && <p className={styles.error}>{errors[name]}</p>}
+          </div>
+        );
+      default:
+        return (
+          <div className={styles.formGroup}>
+            <p className={styles.error}>No input defined for this step. Please report this issue.</p>
+          </div>
+        ); // Fallback for debugging
     }
   };
 
@@ -159,7 +383,13 @@ export default function RegisterPage() {
           <section className={styles.registerSection}>
             <div className={styles.container}>
               <div className={styles.progressBar}>
-                <span>Step {step} of 5</span>
+                {step === 0 ? (
+                  <span>Introduction</span>
+                ) : step <= totalQuestions ? (
+                  <span>Question {step} of {totalQuestions}</span>
+                ) : (
+                  <span>Review and Submit</span>
+                )}
               </div>
 
               {step === 0 && (
@@ -188,101 +418,12 @@ export default function RegisterPage() {
               )}
 
               <form onSubmit={handleSubmit} className={styles.registerForm}>
-                {step === 1 && (
+                {step > 0 && step <= totalQuestions && (
                   <>
-                    <h2 className={styles.sectionHeader}>Personal Information</h2>
-                    <div className={styles.formGroup}>
-                      <label htmlFor="fullName">Full Name (Required)</label>
-                      <input
-                        type="text"
-                        id="fullName"
-                        name="fullName"
-                        placeholder="Enter your full legal name"
-                        value={formData.fullName}
-                        onChange={handleInputChange}
-                        required
-                      />
-                      {errors.fullName && <p className={styles.error}>{errors.fullName}</p>}
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label htmlFor="profilePicture">Profile Picture (Optional, recommended size: 200x200px)</label>
-                      <input
-                        type="file"
-                        id="profilePicture"
-                        name="profilePicture"
-                        accept="image/*"
-                        className={styles.fileInput}
-                        onChange={handleImageChange}
-                        ref={fileInputRef}
-                      />
-                      <div className={styles.profileCard}>
-                        {previewImage ? (
-                          <>
-                            <img src={previewImage} alt="Profile Preview" className={styles.previewImage} />
-                            <button
-                              type="button"
-                              className={styles.removeButton}
-                              onClick={handleRemoveImage}
-                            >
-                              ×
-                            </button>
-                          </>
-                        ) : (
-                          <label htmlFor="profilePicture" className={styles.customFileUpload}>
-                            📤 Upload Profile Picture
-                          </label>
-                        )}
-                      </div>
-                      {errors.profilePicture && <p className={styles.error}>{errors.profilePicture}</p>}
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label htmlFor="email">Email Address (Required)</label>
-                      <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        placeholder="Enter your email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        required
-                      />
-                      {errors.email && <p className={styles.error}>{errors.email}</p>}
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label htmlFor="location">Location (City, Country) (Required)</label>
-                      <input
-                        type="text"
-                        id="location"
-                        name="location"
-                        placeholder="Enter your current city and country"
-                        value={formData.location}
-                        onChange={handleInputChange}
-                        required
-                      />
-                      {errors.location && <p className={styles.error}>{errors.location}</p>}
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label htmlFor="languages">Languages You Report In</label>
-                      <input
-                        type="text"
-                        id="languages"
-                        name="languages"
-                        placeholder="List languages used professionally"
-                        value={formData.languages}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label htmlFor="pronouns">Preferred Pronouns (Optional)</label>
-                      <input
-                        type="text"
-                        id="pronouns"
-                        name="pronouns"
-                        placeholder="e.g., she/her, he/him, they/them"
-                        value={formData.pronouns}
-                        onChange={handleInputChange}
-                      />
-                    </div>
+                    <h2 className={styles.sectionHeader}>
+                      Section {questions[step - 1].section}: {questions[step - 1].section === 1 ? 'Personal Information' : questions[step - 1].section === 2 ? 'Journalism Credentials' : questions[step - 1].section === 3 ? 'Verification Questions' : 'Self-Declaration'}
+                    </h2>
+                    {renderQuestion(questions[step - 1])}
                     <div className={styles.buttonGroup}>
                       <button type="button" className={styles.backButton} onClick={handleBack}>
                         Back
@@ -294,272 +435,7 @@ export default function RegisterPage() {
                   </>
                 )}
 
-                {step === 2 && (
-                  <>
-                    <h2 className={styles.sectionHeader}>Journalism Credentials</h2>
-                    <div className={styles.formGroup}>
-                      <label>Primary Role (Required)</label>
-                      <div className={styles.roleGroup}>
-                        {[
-                          'Reporter',
-                          'Editor',
-                          'Correspondent',
-                          'Investigative Journalist',
-                          'Freelance Journalist',
-                          'Photo/Video Journalist',
-                          'Other',
-                        ].map((role) => (
-                          <button
-                            key={role}
-                            type="button"
-                            className={`${styles.roleButton} ${formData.primaryRole === role ? styles.selected : ''}`}
-                            onClick={() => handleRoleSelect(role)}
-                          >
-                            {role}
-                          </button>
-                        ))}
-                      </div>
-                      <input
-                        type="text"
-                        name="otherRole"
-                        placeholder="Specify if Other"
-                        value={formData.otherRole}
-                        onChange={handleInputChange}
-                        className={styles.otherInput}
-                      />
-                      {errors.primaryRole && <p className={styles.error}>{errors.primaryRole}</p>}
-                      {errors.otherRole && <p className={styles.error}>{errors.otherRole}</p>}
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label htmlFor="mediaAffiliation">Current Media Affiliation(s)</label>
-                      <input
-                        type="text"
-                        id="mediaAffiliation"
-                        name="mediaAffiliation"
-                        placeholder="Enter media organization or 'Freelance'"
-                        value={formData.mediaAffiliation}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label htmlFor="portfolio">Official Website or Portfolio (Optional)</label>
-                      <input
-                        type="url"
-                        id="portfolio"
-                        name="portfolio"
-                        placeholder="Enter your professional website or portfolio link"
-                        value={formData.portfolio}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label>Domain Contribution Links (Minimum of 2)</label>
-                      <input
-                        type="url"
-                        name="domainContribution1"
-                        placeholder="Link"
-                        value={formData.domainContribution1}
-                        onChange={handleInputChange}
-                        required
-                      />
-                      {errors.domainContribution1 && <p className={styles.error}>{errors.domainContribution1}</p>}
-                      <input
-                        type="url"
-                        name="domainContribution2"
-                        placeholder="Link"
-                        value={formData.domainContribution2}
-                        onChange={handleInputChange}
-                        required
-                      />
-                      {errors.domainContribution2 && <p className={styles.error}>{errors.domainContribution2}</p>}
-                      <input
-                        type="url"
-                        name="domainContributionAdditional"
-                        placeholder="Additional link (optional)"
-                        value={formData.domainContributionAdditional}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label htmlFor="pressCard">Press Card / Journalist ID Upload (Optional)</label>
-                      <input
-                        type="file"
-                        id="pressCard"
-                        name="pressCard"
-                        accept="image/*,.pdf"
-                        className={styles.fileInput}
-                        onChange={handleInputChange}
-                        ref={pressCardInputRef}
-                      />
-                      <div className={styles.uploadContainer}>
-                        {formData.pressCard ? (
-                          <div className={styles.uploadedFileContainer}>
-                            <span className={styles.uploadedFileName}>{formData.pressCard.name}</span>
-                            <button
-                              type="button"
-                              className={styles.removeButton}
-                              onClick={handleRemovePressCard}
-                            >
-                              ×
-                            </button>
-                          </div>
-                        ) : (
-                          <label htmlFor="pressCard" className={styles.customFileUpload}>
-                            📤 Upload Press Card / ID
-                          </label>
-                        )}
-                      </div>
-                    </div>
-                    <div className={styles.buttonGroup}>
-                      <button type="button" className={styles.backButton} onClick={handleBack}>
-                        Back
-                      </button>
-                      <button type="button" className={styles.nextButton} onClick={handleNext}>
-                        Next
-                      </button>
-                    </div>
-                  </>
-                )}
-
-                {step === 3 && (
-                  <>
-                    <h2 className={styles.sectionHeader}>Verification Questions</h2>
-                    <div className={styles.formGroup}>
-                      <label htmlFor="recognition">How would you like to be recognized as a journalist?</label>
-                      <textarea
-                        id="recognition"
-                        name="recognition"
-                        placeholder="Provide a brief statement that reflects your professional identity and journalistic approach."
-                        value={formData.recognition}
-                        onChange={handleInputChange}
-                        required
-                        maxLength={500}
-                      ></textarea>
-                      {errors.recognition && <p className={styles.error}>{errors.recognition}</p>}
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label htmlFor="subjects">What subjects or areas do you primarily report on?</label>
-                      <textarea
-                        id="subjects"
-                        name="subjects"
-                        placeholder="Examples: politics, environment, technology, social justice, gender, conflict, culture, etc."
-                        value={formData.subjects}
-                        onChange={handleInputChange}
-                        required
-                        maxLength={500}
-                      ></textarea>
-                      {errors.subjects && <p className={styles.error}>{errors.subjects}</p>}
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label htmlFor="motivation">What motivated you to pursue a career in journalism?</label>
-                      <textarea
-                        id="motivation"
-                        name="motivation"
-                        placeholder="Share a short paragraph outlining the inspiration or turning point that led you to this field."
-                        value={formData.motivation}
-                        onChange={handleInputChange}
-                        required
-                        maxLength={500}
-                      ></textarea>
-                      {errors.motivation && <p className={styles.error}>{errors.motivation}</p>}
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label>Have you been affiliated with any newsroom, media outlet, or journalist association?</label>
-                      <div className={styles.roleGroup}>
-                        {['Yes', 'No'].map((option) => (
-                          <button
-                            key={option}
-                            type="button"
-                            className={`${styles.roleButton} ${formData.affiliation === option ? styles.selected : ''}`}
-                            onClick={() => handleAffiliationSelect(option)}
-                          >
-                            {option}
-                          </button>
-                        ))}
-                      </div>
-                      <input
-                        type="text"
-                        name="affiliationDetails"
-                        placeholder="Yes (please specify)"
-                        value={formData.affiliationDetails}
-                        onChange={handleInputChange}
-                        className={styles.otherInput}
-                        maxLength={500}
-                      />
-                      {errors.affiliation && <p className={styles.error}>{errors.affiliation}</p>}
-                      {errors.affiliationDetails && <p className={styles.error}>{errors.affiliationDetails}</p>}
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label htmlFor="reason">What is your reason for seeking access to this verified space?</label>
-                      <textarea
-                        id="reason"
-                        name="reason"
-                        placeholder="Explain briefly what you hope to gain or contribute."
-                        value={formData.reason}
-                        onChange={handleInputChange}
-                        required
-                        maxLength={500}
-                      ></textarea>
-                      {errors.reason && <p className={styles.error}>{errors.reason}</p>}
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label htmlFor="videoSubmission">
-                        (Optional) Submit a short video (1–2 minutes) introducing yourself and your intent for joining.
-                        This may include your background, values, or vision for how you intend to use this platform. Upload to Google Drive, Dropbox, or YouTube and provide the link below.
-                      </label>
-                      <input
-                        type="url"
-                        id="videoSubmission"
-                        name="videoSubmission"
-                        placeholder="Video Submission Link"
-                        value={formData.videoSubmission}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                    <div className={styles.buttonGroup}>
-                      <button type="button" className={styles.backButton} onClick={handleBack}>
-                        Back
-                      </button>
-                      <button type="button" className={styles.nextButton} onClick={handleNext}>
-                        Next
-                      </button>
-                    </div>
-                  </>
-                )}
-
-                {step === 4 && (
-                  <>
-                    <h2 className={styles.sectionHeader}>Self-Declaration</h2>
-                    <div className={styles.formGroup}>
-                      <label className={styles.checkboxLabel}>
-                        <input
-                          type="checkbox"
-                          name="selfDeclaration"
-                          checked={formData.selfDeclaration}
-                          onChange={handleInputChange}
-                          required
-                        />
-                        I hereby confirm that I am an active, working journalist. I acknowledge that this platform is
-                        intended exclusively for verified media professionals and understand that all submitted information
-                        will undergo manual review. I accept that if my application is not approved, all associated data
-                        will be securely deleted. I further understand that any false, misleading, or unverifiable claims
-                        may result in permanent disqualification from access. I agree to uphold the principles of
-                        integrity, accuracy, and professional respect in all interactions within this space.
-                      </label>
-                      {errors.selfDeclaration && <p className={styles.error}>{errors.selfDeclaration}</p>}
-                    </div>
-                    <div className={styles.buttonGroup}>
-                      <button type="button" className={styles.backButton} onClick={handleBack}>
-                        Back
-                      </button>
-                      <button type="button" className={styles.nextButton} onClick={handleNext}>
-                        Next
-                      </button>
-                    </div>
-                  </>
-                )}
-
-                {step === 5 && (
+                {step === totalQuestions + 1 && (
                   <>
                     <h2 className={styles.sectionHeader}>Review and Submit</h2>
                     <p className={styles.note}>
