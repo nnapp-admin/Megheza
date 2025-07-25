@@ -183,7 +183,6 @@ export default function LandingPage() {
                   <li><a href="#">Help Center</a></li>
                   <li><a href="#">Contact Us</a></li>
                   <li><a href="#">Verification Guide</a></li>
-                  <li><a href="#">Technical Support</a></li>
                 </ul>
               </div>
               <div className="footer-section">
@@ -192,7 +191,6 @@ export default function LandingPage() {
                   <li><a href="#">About Us</a></li>
                   <li><a href="#">Privacy Policy</a></li>
                   <li><a href="#">Terms of Service</a></li>
-                  <li><a href="#">Careers</a></li>
                 </ul>
               </div>
               <div className="footer-section">
@@ -201,7 +199,6 @@ export default function LandingPage() {
                   <li><a href="#">Guidelines</a></li>
                   <li><a href="#">Ethics Code</a></li>
                   <li><a href="#">Best Practices</a></li>
-                  <li><a href="#">News</a></li>
                 </ul>
               </div>
             </div>
