@@ -207,7 +207,7 @@ export default function LandingPage() {
               <p>Megheza™, Megheza Originals™, and related marks are the intellectual property of the Megheza consortium.</p>
               <p>Unauthorized use, scraping, or impersonation of verified profiles is strictly prohibited and prosecutable under international cyberlaw.</p>
               <div className="footer-contact">
-                <p>For all editorial, partnership, verification, or legal inquiries: <a href="mailto:media_network@megheza.com">✉️ media_network@megheza.com</a></p>
+                <p>For all editorial, partnership, verification, or legal inquiries: <a href="mailto:media_network@megheza.com">media_network@megheza.com</a></p>
               </div>
             </div>
           </div>
