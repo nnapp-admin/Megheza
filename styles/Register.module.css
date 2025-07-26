@@ -330,13 +330,13 @@
 }
 
 .checkboxLabel input:checked {
-  background: #4400ff;
+  background: #ffffff;
   border: 1px solid #333;
 }
 
 .checkboxLabel input:checked::after {
   content: '✔';
-  color: #ffffff;
+  color: #000000;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -351,8 +351,9 @@
 }
 
 .warning a {
-  color: #0099ff;
+  color: #ffffff;
   text-decoration: none;
+  font-weight: bold;
 }
 
 .warning a:hover {

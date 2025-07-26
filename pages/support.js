@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import styles from '../styles/Support.module.css';
+import { FaTools, FaEnvelope, FaClock, FaBook, FaShieldAlt, FaFileAlt, FaFileSignature, FaBrain } from 'react-icons/fa';
 
 export default function Support() {
   const router = useRouter();
@@ -114,7 +115,7 @@ export default function Support() {
           <section className={`${styles.section} scroll-reveal`} id="support">
             <div className={styles.container}>
               <h2>Support</h2>
-              <h3>🛠️ Help Center</h3>
+              <h3><FaTools /> Help Center</h3>
               <p>Need assistance navigating the Megheza platform? Our Help Center is designed to provide you with practical, detailed support for all stages of your membership, including:</p>
               <ul>
                 <li>Account registration & login help</li>
@@ -125,7 +126,7 @@ export default function Support() {
               </ul>
               <p>You can also find answers to frequently asked questions and technical documentation.</p>
               <p>
-                📩 For unresolved issues, email: <a href="mailto:media_network@megheza.com">media_network@megheza.com</a>
+                <FaEnvelope /> For unresolved issues, email: <a href="mailto:media_network@megheza.com">media_network@megheza.com</a>
               </p>
             </div>
           </section>
@@ -135,9 +136,9 @@ export default function Support() {
               <h2>Contact Us</h2>
               <p>We are a globally distributed platform and strive to respond swiftly and thoughtfully. For any communication—technical, editorial, security-related, or partnership-based—please contact:</p>
               <p>
-                📨 Official Email: <a href="mailto:media_network@megheza.com">media_network@megheza.com</a>
+                <FaEnvelope /> Official Email: <a href="mailto:media_network@megheza.com">media_network@megheza.com</a>
               </p>
-              <p>🕓 Standard Response Time: 24–48 business hours</p>
+              <p><FaClock /> Standard Response Time: 24–48 business hours</p>
               <p>Please include your name, issue type, and verification ID (if applicable).</p>
             </div>
           </section>
@@ -167,7 +168,7 @@ export default function Support() {
           <section className={`${styles.section} scroll-reveal`} id="company">
             <div className={styles.container}>
               <h2>Company</h2>
-              <h3>📘 About Us</h3>
+              <h3><FaBook /> About Us</h3>
               <p>Megheza is the world’s first verified-only global journalist media network, created to empower professionals who defend truth in an age of noise, misinformation, and synthetic content. We are a secure, curated digital infrastructure that supports:</p>
               <ul>
                 <li>Cross-border collaboration between trusted journalists</li>
@@ -190,7 +191,7 @@ export default function Support() {
                 <li>You may request access, update, or deletion of your data at any time</li>
               </ul>
               <p>
-                📩 For privacy inquiries: <a href="mailto:media_network@megheza.com">media_network@megheza.com</a>
+                <FaEnvelope /> For privacy inquiries: <a href="mailto:media_network@megheza.com">media_network@megheza.com</a>
               </p>
             </div>
           </section>
@@ -212,7 +213,7 @@ export default function Support() {
           <section className={`${styles.section} scroll-reveal`} id="consortium">
             <div className={styles.container}>
               <h2>Consortium</h2>
-              <h3>📑 Guidelines</h3>
+              <h3><FaFileAlt /> Guidelines</h3>
               <p>Our platform thrives on structured, fair, and respectful engagement. These guidelines govern how journalists:</p>
               <ul>
                 <li>Exchange story leads and protect source material</li>
@@ -222,7 +223,7 @@ export default function Support() {
               </ul>
               <p>These rules are designed to uphold professional conduct and safeguard your work.</p>
 
-              <h3>🧭 Ethics Code</h3>
+              <h3><FaFileSignature /> Ethics Code</h3>
               <p>Adapted from global press councils and journalist federations, the Megheza Ethics Code emphasizes:</p>
               <ul>
                 <li>Accuracy over sensationalism</li>
@@ -233,7 +234,7 @@ export default function Support() {
               </ul>
               <p>Every member must abide by these principles. Violations are reviewed seriously.</p>
 
-              <h3>🧠 Best Practices</h3>
+              <h3><FaBrain /> Best Practices</h3>
               <p>Our Best Practices archive is a curated and evolving resource, offering tools and insights for:</p>
               <ul>
                 <li>Cybersecurity & data protection for journalists</li>
@@ -261,7 +262,7 @@ export default function Support() {
               <h2>Official Contact</h2>
               <p>For all editorial, partnership, verification, or legal inquiries:</p>
               <p>
-                ✉️ <a href="mailto:media_network@megheza.com">media_network@megheza.com</a>
+                <FaEnvelope /> <a href="mailto:media_network@megheza.com">media_network@megheza.com</a>
               </p>
             </div>
           </section>

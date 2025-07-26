@@ -1,11 +1,12 @@
 import { useState, useRef } from 'react';
 import Head from 'next/head';
 import styles from '../styles/Register.module.css';
+import { FaUpload } from 'react-icons/fa';
 
 // Define questions for each section
 const questions = [
-  // Section 1: Personal Information
-  { section: 1, name: 'fullName', label: 'Full Name <span class="required-asterisk">*</span>', type: 'text', placeholder: 'Enter your full legal name', required: true },
+  // Section 1: Personal Informationbenefits:// Section 1: Personal Information
+  { section: 1, name: 'fullName', label: 'Benefits:// Full Name <span class="required-asterisk">*</span>', type: 'text', placeholder: 'Enter your full legal name', required: true },
   { section: 1, name: 'profilePicture', label: 'Profile Picture (Optional, recommended size: 200x200px)', type: 'file', accept: 'image/*' },
   { section: 1, name: 'email', label: 'Email Address <span class="required-asterisk">*</span>', type: 'email', placeholder: 'Enter your email', required: true },
   { section: 1, name: 'location', label: 'Location (City, Country) <span class="required-asterisk">*</span>', type: 'text', placeholder: 'Enter your current city and country', required: true },
@@ -122,11 +123,11 @@ export default function RegisterPage() {
     if (conditional && !conditional(formData)) return true;
 
     if (required && !formData[name]) {
-      newErrors[name] = `${question.label.replace(/<span class="required-asterisk">.*<\/span>/, '')} is required`;
+      newErrors[name] = 'Answer required to continue';
     } else if (name === 'primaryRole' && formData.primaryRole === 'Other' && !formData.otherRole) {
-      newErrors.otherRole = 'Please specify your role';
+      newErrors.otherRole = 'Answer required to continue';
     } else if (name === 'affiliationDetails' && formData.affiliation === 'Yes' && !formData.affiliationDetails) {
-      newErrors.affiliationDetails = 'Please specify affiliation details';
+      newErrors.affiliationDetails = 'Answer required to continue';
     }
 
     setErrors(newErrors);
@@ -152,13 +153,13 @@ export default function RegisterPage() {
     questions.forEach((question) => {
       if (question.conditional && !question.conditional(formData)) return;
       if (question.required && !formData[question.name]) {
-        newErrors[question.name] = `${question.label.replace(/<span class="required-asterisk">.*<\/span>/, '')} is required`;
+        newErrors[question.name] = 'Answer required to continue';
       }
       if (question.name === 'primaryRole' && formData.primaryRole === 'Other' && !formData.otherRole) {
-        newErrors.otherRole = 'Please specify your role';
+        newErrors.otherRole = 'Answer required to continue';
       }
       if (question.name === 'affiliationDetails' && formData.affiliation === 'Yes' && !formData.affiliationDetails) {
-        newErrors.affiliationDetails = 'Please specify affiliation details';
+        newErrors.affiliationDetails = 'Answer required to continue';
       }
     });
     setErrors(newErrors);
@@ -247,7 +248,7 @@ export default function RegisterPage() {
                   </>
                 ) : (
                   <label htmlFor={name} className={styles.customFileUpload}>
-                    📤 Upload Profile Picture
+                    <FaUpload /> Upload Profile Picture
                   </label>
                 )}
               </div>
@@ -262,7 +263,7 @@ export default function RegisterPage() {
                   </div>
                 ) : (
                   <label htmlFor={name} className={styles.customFileUpload}>
-                    📤 Upload Press Card / ID
+                    <FaUpload /> Upload Press Card / ID
                   </label>
                 )}
               </div>
