@@ -112,6 +112,11 @@
   margin-bottom: 0.5rem;
 }
 
+.required-asterisk {
+  color: #ff0000;
+  font-weight: bold;
+}
+
 .formGroup input,
 .formGroup textarea {
   width: 100%;

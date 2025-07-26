@@ -5,30 +5,29 @@ import styles from '../styles/Register.module.css';
 // Define questions for each section
 const questions = [
   // Section 1: Personal Information
-  { section: 1, name: 'fullName', label: 'Full Name (Required)', type: 'text', placeholder: 'Enter your full legal name', required: true },
+  { section: 1, name: 'fullName', label: 'Full Name <span class="required-asterisk">*</span>', type: 'text', placeholder: 'Enter your full legal name', required: true },
   { section: 1, name: 'profilePicture', label: 'Profile Picture (Optional, recommended size: 200x200px)', type: 'file', accept: 'image/*' },
-  { section: 1, name: 'email', label: 'Email Address (Required)', type: 'email', placeholder: 'Enter your email', required: true },
-  { section: 1, name: 'location', label: 'Location (City, Country) (Required)', type: 'text', placeholder: 'Enter your current city and country', required: true },
-  { section: 1, name: 'languages', label: 'Languages You Report In', type: 'text', placeholder: 'List languages used professionally' },
+  { section: 1, name: 'email', label: 'Email Address <span class="required-asterisk">*</span>', type: 'email', placeholder: 'Enter your email', required: true },
+  { section: 1, name: 'location', label: 'Location (City, Country) <span class="required-asterisk">*</span>', type: 'text', placeholder: 'Enter your current city and country', required: true },
+  { section: 1, name: 'languages', label: 'Languages you report in', type: 'text', placeholder: 'List languages used professionally' },
   { section: 1, name: 'pronouns', label: 'Preferred Pronouns (Optional)', type: 'text', placeholder: 'e.g., she/her, he/him, they/them' },
   // Section 2: Journalism Credentials
-  { section: 2, name: 'primaryRole', label: 'Primary Role (Required)', type: 'role', required: true },
+  { section: 2, name: 'primaryRole', label: 'Primary Role <span class="required-asterisk">*</span>', type: 'role', required: true },
   { section: 2, name: 'mediaAffiliation', label: 'Current Media Affiliation(s)', type: 'text', placeholder: 'Enter media organization or "Freelance"' },
   { section: 2, name: 'portfolio', label: 'Official Website or Portfolio (Optional)', type: 'url', placeholder: 'Enter your professional website or portfolio link' },
-  { section: 2, name: 'domainContribution1', label: 'Domain Contribution Link 1 (Required)', type: 'url', placeholder: 'Link', required: true },
-  { section: 2, name: 'domainContribution2', label: 'Domain Contribution Link 2 (Required)', type: 'url', placeholder: 'Link', required: true },
+  { section: 2, name: 'domainContribution1', label: 'Domain Contribution Link 1 <span class="required-asterisk">*</span>', type: 'url', placeholder: 'We’re excited to explore your work — please share a link', required: true },
   { section: 2, name: 'domainContributionAdditional', label: 'Additional Domain Contribution Link (Optional)', type: 'url', placeholder: 'Additional link (optional)' },
   { section: 2, name: 'pressCard', label: 'Press Card / Journalist ID Upload (Optional)', type: 'file', accept: 'image/*,.pdf' },
   // Section 3: Verification Questions
-  { section: 3, name: 'recognition', label: 'How would you like to be recognized as a journalist?', type: 'textarea', placeholder: 'Provide a brief statement that reflects your professional identity and journalistic approach.', required: true, maxLength: 500 },
-  { section: 3, name: 'subjects', label: 'What subjects or areas do you primarily report on?', type: 'textarea', placeholder: 'Examples: politics, environment, technology, social justice, gender, conflict, culture, etc.', required: true, maxLength: 500 },
-  { section: 3, name: 'motivation', label: 'What motivated you to pursue a career in journalism?', type: 'textarea', placeholder: 'Share a short paragraph outlining the inspiration or turning point that led you to this field.', required: true, maxLength: 500 },
-  { section: 3, name: 'affiliation', label: 'Have you been affiliated with any newsroom, media outlet, or journalist association?', type: 'affiliation', required: true },
+  { section: 3, name: 'recognition', label: 'How would you like to be recognized as a journalist? <span class="required-asterisk">*</span>', type: 'textarea', placeholder: 'Provide a brief statement that reflects your professional identity and journalistic approach.', required: true, maxLength: 500 },
+  { section: 3, name: 'subjects', label: 'What subjects or areas do you primarily report on? <span class="required-asterisk">*</span>', type: 'textarea', placeholder: 'Examples: politics, environment, technology, social justice, gender, conflict, culture, etc.', required: true, maxLength: 500 },
+  { section: 3, name: 'motivation', label: 'What motivated you to pursue a career in journalism? <span class="required-asterisk">*</span>', type: 'textarea', placeholder: 'Share a short paragraph outlining the inspiration or turning point that led you to this field.', required: true, maxLength: 500 },
+  { section: 3, name: 'affiliation', label: 'Have you been affiliated with any newsroom, media outlet, or journalist association? <span class="required-asterisk">*</span>', type: 'affiliation', required: true },
   { section: 3, name: 'affiliationDetails', label: 'Affiliation Details (if Yes)', type: 'text', placeholder: 'Yes (please specify)', conditional: (formData) => formData.affiliation === 'Yes', maxLength: 500 },
-  { section: 3, name: 'reason', label: 'What is your reason for seeking access to this verified space?', type: 'textarea', placeholder: 'Explain briefly what you hope to gain or contribute.', required: true, maxLength: 500 },
+  { section: 3, name: 'reason', label: 'What is your reason for seeking access to this verified space? <span class="required-asterisk">*</span>', type: 'textarea', placeholder: 'Explain briefly what you hope to gain or contribute.', required: true, maxLength: 500 },
   { section: 3, name: 'videoSubmission', label: '(Optional) Submit a short video (1–2 minutes) introducing yourself and your intent for joining. This may include your background, values, or vision for how you intend to use this platform. Upload to Google Drive, Dropbox, or YouTube and provide the link below.', type: 'url', placeholder: 'Video Submission Link' },
   // Section 4: Self-Declaration
-  { section: 4, name: 'selfDeclaration', label: 'Self-Declaration', type: 'checkbox', required: true, text: 'I hereby confirm that I am an active, working journalist. I acknowledge that this platform is intended exclusively for verified media professionals and understand that all submitted information will undergo manual review. I accept that if my application is not approved, all associated data will be securely deleted. I further understand that any false, misleading, or unverifiable claims may result in permanent disqualification from access. I agree to uphold the principles of integrity, accuracy, and professional respect in all interactions within this space.' },
+  { section: 4, name: 'selfDeclaration', label: 'Self-Declaration <span class="required-asterisk">*</span>', type: 'checkbox', required: true, text: 'I hereby confirm that I am an active, working journalist. I acknowledge that this platform is intended exclusively for verified media professionals and understand that all submitted information will undergo manual review. I accept that if my application is not approved, all associated data will be securely deleted. I further understand that any false, misleading, or unverifiable claims may result in permanent disqualification from access. I agree to uphold the principles of integrity, accuracy, and professional respect in all interactions within this space.' },
 ];
 
 // Total number of questions
@@ -123,7 +122,7 @@ export default function RegisterPage() {
     if (conditional && !conditional(formData)) return true;
 
     if (required && !formData[name]) {
-      newErrors[name] = `${question.label} is required`;
+      newErrors[name] = `${question.label.replace(/<span class="required-asterisk">.*<\/span>/, '')} is required`;
     } else if (name === 'primaryRole' && formData.primaryRole === 'Other' && !formData.otherRole) {
       newErrors.otherRole = 'Please specify your role';
     } else if (name === 'affiliationDetails' && formData.affiliation === 'Yes' && !formData.affiliationDetails) {
@@ -153,7 +152,7 @@ export default function RegisterPage() {
     questions.forEach((question) => {
       if (question.conditional && !question.conditional(formData)) return;
       if (question.required && !formData[question.name]) {
-        newErrors[question.name] = `${question.label} is required`;
+        newErrors[question.name] = `${question.label.replace(/<span class="required-asterisk">.*<\/span>/, '')} is required`;
       }
       if (question.name === 'primaryRole' && formData.primaryRole === 'Other' && !formData.otherRole) {
         newErrors.otherRole = 'Please specify your role';
@@ -185,7 +184,7 @@ export default function RegisterPage() {
         <div className={styles.formGroup}>
           <p className={styles.note}>This field will appear when the condition is met (e.g., select "Yes" for affiliation).</p>
         </div>
-      ); // Debug message for conditional fields
+      );
     }
 
     switch (type) {
@@ -194,7 +193,7 @@ export default function RegisterPage() {
       case 'url':
         return (
           <div className={styles.formGroup}>
-            <label htmlFor={name}>{label}</label>
+            <label htmlFor={name} dangerouslySetInnerHTML={{ __html: label }}></label>
             <input
               type={type}
               id={name}
@@ -211,7 +210,7 @@ export default function RegisterPage() {
       case 'textarea':
         return (
           <div className={styles.formGroup}>
-            <label htmlFor={name}>{label}</label>
+            <label htmlFor={name} dangerouslySetInnerHTML={{ __html: label }}></label>
             <textarea
               id={name}
               name={name}
@@ -227,7 +226,7 @@ export default function RegisterPage() {
       case 'file':
         return (
           <div className={styles.formGroup}>
-            <label htmlFor={name}>{label}</label>
+            <label htmlFor={name} dangerouslySetInnerHTML={{ __html: label }}></label>
             <input
               type="file"
               id={name}
@@ -274,7 +273,7 @@ export default function RegisterPage() {
       case 'role':
         return (
           <div className={styles.formGroup}>
-            <label>{label}</label>
+            <label dangerouslySetInnerHTML={{ __html: label }}></label>
             <div className={styles.roleGroup}>
               {[
                 'Reporter',
@@ -313,7 +312,7 @@ export default function RegisterPage() {
       case 'affiliation':
         return (
           <div className={styles.formGroup}>
-            <label>{label}</label>
+            <label dangerouslySetInnerHTML={{ __html: label }}></label>
             <div className={styles.roleGroup}>
               {['Yes', 'No'].map((option) => (
                 <button
@@ -340,7 +339,8 @@ export default function RegisterPage() {
                 onChange={handleInputChange}
                 required={required}
               />
-              {text}
+              <span dangerouslySetInnerHTML={{ __html: label }}></span>
+              <div>{text}</div>
             </label>
             {errors[name] && <p className={styles.error}>{errors[name]}</p>}
           </div>
@@ -350,7 +350,7 @@ export default function RegisterPage() {
           <div className={styles.formGroup}>
             <p className={styles.error}>No input defined for this step. Please report this issue.</p>
           </div>
-        ); // Fallback for debugging
+        );
     }
   };
 
