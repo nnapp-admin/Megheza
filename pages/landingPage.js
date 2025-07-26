@@ -111,7 +111,7 @@ export default function LandingPage() {
       <div className="page-wrapper">
         <header>
           <nav className="container">
-            <a href="#" className="logo">
+            <a href="/" className="logo">
               <img src="/assets/Logo.png" alt="The Megheza Logo" className="logo-image" />
               Megheza
             </a>
@@ -180,30 +180,35 @@ export default function LandingPage() {
               <div className="footer-section">
                 <h3>Support</h3>
                 <ul>
-                  <li><a href="#">Help Center</a></li>
-                  <li><a href="#">Contact Us</a></li>
-                  <li><a href="#">Verification Guide</a></li>
+                  <li><a href="/support#support">Help Center</a></li>
+                  <li><a href="/support#contact">Contact Us</a></li>
+                  <li><a href="/support#verification">Verification Guide</a></li>
                 </ul>
               </div>
               <div className="footer-section">
                 <h3>Company</h3>
                 <ul>
-                  <li><a href="#">About Us</a></li>
-                  <li><a href="#">Privacy Policy</a></li>
-                  <li><a href="#">Terms of Service</a></li>
+                  <li><a href="/support#company">About Us</a></li>
+                  <li><a href="/support#privacy">Privacy Policy</a></li>
+                  <li><a href="/support#terms">Terms of Service</a></li>
                 </ul>
               </div>
               <div className="footer-section">
                 <h3>Consortium</h3>
                 <ul>
-                  <li><a href="#">Guidelines</a></li>
-                  <li><a href="#">Ethics Code</a></li>
-                  <li><a href="#">Best Practices</a></li>
+                  <li><a href="/support#consortium">Guidelines</a></li>
+                  <li><a href="/support#consortium">Ethics Code</a></li>
+                  <li><a href="/support#consortium">Best Practices</a></li>
                 </ul>
               </div>
             </div>
             <div className="footer-bottom">
-              <p>Copyright © 2025 Megheza. All Rights Reserved.</p>
+              <p>© 2025 Megheza – Verified Global Journalist Media Network. All Rights Reserved.</p>
+              <p>Megheza™, Megheza Originals™, and related marks are the intellectual property of the Megheza consortium.</p>
+              <p>Unauthorized use, scraping, or impersonation of verified profiles is strictly prohibited and prosecutable under international cyberlaw.</p>
+              <div className="footer-contact">
+                <p>For all editorial, partnership, verification, or legal inquiries: <a href="mailto:media_network@megheza.com">✉️ media_network@megheza.com</a></p>
+              </div>
             </div>
           </div>
         </footer>

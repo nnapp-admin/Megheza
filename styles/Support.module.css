@@ -1,0 +1,227 @@
+.pageWrapper {
+  background: #1a1a1a;
+  color: #ffffff;
+  font-family: Helvetica, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.header {
+  background: #1a1a1a;
+  border-bottom: 1px solid #333;
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  color: #ffffff;
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.logoImage {
+  height: 40px;
+  margin-right: 0.5rem;
+}
+
+.navButtons {
+  display: flex;
+  gap: 1rem;
+}
+
+.ctaButton {
+  background: linear-gradient(135deg, #8b0000, #b22222);
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 50px;
+  font-family: Helvetica, sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.ctaButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(139, 0, 0, 0.4);
+}
+
+.secondaryButton {
+  background: transparent;
+  color: #ffffff;
+  padding: 0.8rem 1.5rem;
+  border: 1px solid #b22222;
+  border-radius: 50px;
+  font-family: Helvetica, sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.secondaryButton:hover {
+  background: #b22222;
+  color: #ffffff;
+}
+
+.main {
+  flex: 1;
+}
+
+.section {
+  padding: 4rem 0;
+}
+
+.section h2 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.section h3 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin: 1.5rem 0 0.8rem;
+}
+
+.section p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #cccccc;
+  margin-bottom: 1rem;
+}
+
+.section ul {
+  list-style-type: none;
+  margin-bottom: 1rem;
+}
+
+.section ul li {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #cccccc;
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.section ul li::before {
+  content: '✓';
+  color: #8b0000;
+  position: absolute;
+  left: 0;
+}
+
+.section a {
+  color: #b22222;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.section a:hover {
+  color: #ffffff;
+}
+
+.scrollReveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.scrollReveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.ctaSection {
+  padding: 4rem 0;
+  background: #222;
+}
+
+.ctaContent {
+  text-align: center;
+}
+
+.ctaContent h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.ctaContent p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #cccccc;
+  margin-bottom: 1.5rem;
+}
+
+.ctaButtonLarge {
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+}
+
+.footer {
+  background: #111;
+  padding: 2rem 0;
+  border-top: 1px solid #333;
+}
+
+.footerBottom {
+  text-align: center;
+  color: #cccccc;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .section h2 {
+    font-size: 1.5rem;
+  }
+
+  .section h3 {
+    font-size: 1.2rem;
+  }
+
+  .navButtons {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .section {
+    padding: 2rem 0;
+  }
+
+  .section h2 {
+    font-size: 1.3rem;
+  }
+
+  .ctaButton, .secondaryButton {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .ctaButtonLarge {
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+  }
+}
