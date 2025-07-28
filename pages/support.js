@@ -153,7 +153,6 @@ export default function Support() {
                 <li>Confidential alert system to notify moderators and safety partners in the event of regional threats.</li>
               </ul>
               <p>All entries in the Help Center are vetted and updated by an editorial-technical working group comprised of frontline journalists, open-source intelligence analysts, safety officers, and field editors.</p>
-              <p><FaEnvelope /> For unresolved issues, email: <a href="mailto:media_network@megheza.com">media_network@megheza.com</a></p>
             </div>
           </section>
 
@@ -169,7 +168,7 @@ export default function Support() {
                 <li>Institutional collaboration proposals from journalism schools, NGOs, indigenous documentation projects, or independent fact-checking networks.</li>
               </ul>
               <p>All incoming messages are directed to our decentralized editorial desks, which triage issues by urgency and field relevance. Our review process is manual, conducted by journalist coordinators operating across time zones to maintain global coverage. We prioritize human understanding, not auto-generated support scripts.</p>
-              <p><FaEnvelope /> Official Email: <a href="mailto:media_network@megheza.com">media_network@megheza.com</a></p>
+              <p><FaEnvelope /> Official Email: <a href="mailto:media.network@megheza.com">media.network@megheza.com</a></p>
               <p><FaClock /> Standard Response Time: 24–48 business hours</p>
             </div>
           </section>
@@ -292,7 +291,6 @@ export default function Support() {
           <section className={`${styles.section} scroll-reveal`} id="privacy">
             <div className={styles.container}>
               <h2>Privacy Policy</h2>
-              <p><strong>Effective Date: July 27, 2025</strong></p>
               <p>At Megheza, we believe that privacy is not simply a legal obligation—it is a foundational principle of credible journalism and ethical media infrastructure. Our privacy framework is designed to preserve the dignity, agency, and professional autonomy of every verified journalist in our ecosystem. This Privacy Policy outlines the nature of the data we collect, the purposes behind its collection, the security measures deployed to protect it, and your rights as a user operating within a sovereign media platform of international standards.</p>
               <p>We recognize that the challenges facing journalists today are not only editorial but existential. Surveillance, data breaches, and opaque algorithmic profiling have become normalized. At Megheza, we reject that norm. Our infrastructure is intentionally built to resist exploitation, minimize data retention, and foster a culture of digital sanctity. You are not our product—you are our purpose.</p>
               <h3>1. Information We Collect and Why It Matters</h3>
@@ -384,14 +382,12 @@ export default function Support() {
               <p>Our internal Data Ethics Office reviews all complaints or disputes involving user data. Investigations are carried out independently of the product or editorial teams, ensuring transparency and fairness. Final decisions are archived for accountability and made available upon request.</p>
               <p>Megheza is more than a platform—it is a principled structure built on the sanctity of press freedom and human dignity. We do not collect what we do not need. We do not store what we cannot protect. We do not exploit what we cannot ethically defend.</p>
               <p>In the pursuit of truth, your data is never the cost—it is the responsibility we uphold.</p>
-              <p><FaEnvelope /> For privacy inquiries: <a href="mailto:media_network@megheza.com">media_network@megheza.com</a></p>
             </div>
           </section>
 
           <section className={`${styles.section} scroll-reveal`} id="terms">
             <div className={styles.container}>
               <h2>Terms of Service</h2>
-              <p><strong>Effective Date: July 27, 2025</strong></p>
               <p>Welcome to Megheza. These Terms of Service ("Terms") govern your access to and use of the Megheza platform and all associated services, including but not limited to our secure journalist network, collaborative tools, and Megheza Originals storytelling segment. By using our platform, you agree to abide by these terms in their entirety. If you do not accept these Terms, you may not access or use Megheza.</p>
               <p>These Terms are intended to protect both the individual journalist and the integrity of our global media ecosystem. Our platform is designed specifically for verified professionals in journalism, and the standards outlined here reflect the professional, ethical, and security expectations we uphold.</p>
               <h3>1. Acceptance of Terms</h3>
@@ -468,8 +464,7 @@ export default function Support() {
 
           <section className={`${styles.section} scroll-reveal`} id="consortium">
             <div className={styles.container}>
-              <h2>Consortium Guidelines</h2>
-              <p><strong>Effective Date: July 27, 2025</strong></p>
+              <h2>Guidelines</h2>
               <p>The Megheza Consortium represents a cooperative framework that brings together journalists, editors, visual storytellers, media scholars, and regional collaborators to pursue the advancement of ethical journalism, cross-border reporting, and digital sovereignty. The guidelines below define the standards, principles, and operational norms for all those participating in or contributing to Megheza’s consortium initiatives.</p>
               <h3>I. Vision and Mandate</h3>
               <p>The Megheza Consortium is driven by a mission to create a secure, verified, and collaborative environment where media professionals can engage in meaningful storytelling, factual reporting, and long-form narrative creation across borders. As such, the consortium facilitates the following:</p>
@@ -781,7 +776,6 @@ export default function Support() {
             <div className={styles.container}>
               <h2>Official Contact</h2>
               <p>For all editorial, partnership, verification, or legal inquiries:</p>
-              <p><FaEnvelope /> <a href="mailto:media_network@megheza.com">media_network@megheza.com</a></p>
             </div>
           </section>
 

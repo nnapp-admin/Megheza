@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import Head from 'next/head';
-import Link from 'next/link'; // Added import for Link
+import Link from 'next/link';
 import styles from '../styles/Register.module.css';
 import { FaUpload } from 'react-icons/fa';
 
@@ -8,18 +8,17 @@ import { FaUpload } from 'react-icons/fa';
 const questions = [
   // Section 1: Personal Information
   { section: 1, name: 'fullName', label: 'Full Name<span class="required-asterisk">*</span>', type: 'text', placeholder: 'Enter your full legal name', required: true },
-  { section: 1, name: 'profilePicture', label: 'Profile Picture (Optional, recommended size: 200x200px)', type: 'file', accept: 'image/*' },
+  { section: 1, name: 'profilePicture', label: 'Profile Picture (Optional, Maximum file size: 150 KB)', type: 'file', accept: 'image/*' },
   { section: 1, name: 'email', label: 'Email Address<span class="required-asterisk">*</span>', type: 'email', placeholder: 'Enter your email', required: true },
   { section: 1, name: 'location', label: 'Location (City, Country)<span class="required-asterisk">*</span>', type: 'text', placeholder: 'Enter your current city and country', required: true },
-  { section: 1, name: 'languages', label: 'Languages you report in<span class="required-asterisk">*</span>', type: 'text', placeholder: 'List languages used professionally',required: true },
-  { section: 1, name: 'pronouns', label: 'Preferred Pronouns (Optional)', type: 'text', placeholder: 'e.g., she/her, he/him, they/them' },
+  { section: 1, name: 'languages', label: 'Languages you report in<span class="required-asterisk">*</span>', type: 'text', placeholder: 'List languages used professionally', required: true },
   // Section 2: Journalism Credentials
   { section: 2, name: 'primaryRole', label: 'Primary Role<span class="required-asterisk">*</span>', type: 'role', required: true },
-  { section: 2, name: 'mediaAffiliation', label: 'Current Media Affiliation(s)<span class="required-asterisk">*</span>', type: 'text', placeholder: 'Enter media organization or "Freelance"',required: true },
+  { section: 2, name: 'mediaAffiliation', label: 'Current Media Affiliation(s)<span class="required-asterisk">*</span>', type: 'text', placeholder: 'Enter media organization or "Freelance"', required: true },
   { section: 2, name: 'portfolio', label: 'Official Website or Portfolio (Optional)', type: 'url', placeholder: 'Enter your professional website or portfolio link' },
-  { section: 2, name: 'domainContribution1', label: 'Domain Contribution Link 1<span class="required-asterisk">*</span>', type: 'url', placeholder: 'We’re excited to explore your work — please share a link', required: true },
+  { section: 2, name: 'domainContribution1', label: 'Domain Contribution Link<span class="required-asterisk">*</span>', type: 'url', placeholder: 'We’re excited to explore your work — please share a link', required: true },
   { section: 2, name: 'domainContributionAdditional', label: 'Additional Domain Contribution Link (Optional)', type: 'url', placeholder: 'Additional link (optional)' },
-  { section: 2, name: 'pressCard', label: 'Press Card / Journalist ID Upload (Optional)', type: 'file', accept: 'image/*,.pdf' },
+  { section: 2, name: 'pressCard', label: 'Press Card / Journalist ID Upload (Optional, Maximum file size: 150 KB)', type: 'file', accept: 'image/*,.pdf' },
   // Section 3: Verification Questions
   { section: 3, name: 'recognition', label: 'How would you like to be recognized as a journalist?<span class="required-asterisk">*</span>', type: 'textarea', placeholder: 'Provide a brief statement that reflects your professional identity and journalistic approach.', required: true, maxLength: 500 },
   { section: 3, name: 'subjects', label: 'What subjects or areas do you primarily report on?<span class="required-asterisk">*</span>', type: 'textarea', placeholder: 'Examples: politics, environment, technology, social justice, gender, conflict, culture, etc.', required: true, maxLength: 500 },
@@ -63,6 +62,7 @@ export default function RegisterPage() {
   });
   const [previewImage, setPreviewImage] = useState(null);
   const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false); // New state for loading
   const fileInputRef = useRef(null);
   const pressCardInputRef = useRef(null);
 
@@ -88,15 +88,16 @@ export default function RegisterPage() {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    setFormData((prev) => ({ ...prev, profilePicture: file }));
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setPreviewImage(reader.result);
+        setPreviewImage(reader.result); // Store Base64 URL for preview
+        setFormData((prev) => ({ ...prev, profilePicture: reader.result })); // Store Base64 URL in formData
       };
       reader.readAsDataURL(file);
     } else {
       setPreviewImage(null);
+      setFormData((prev) => ({ ...prev, profilePicture: null }));
     }
     setErrors((prev) => ({ ...prev, profilePicture: '' }));
   };
@@ -147,9 +148,8 @@ export default function RegisterPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Validate all questions
     const newErrors = {};
     questions.forEach((question) => {
       if (question.conditional && !question.conditional(formData)) return;
@@ -164,18 +164,85 @@ export default function RegisterPage() {
       }
     });
     setErrors(newErrors);
-    if (Object.keys(newErrors).length === 0) {
-      console.log('Registration submitted:', formData);
-      // Replace with backend API call as needed
-    } else {
-      // Jump to the first question with an error
+
+    if (Object.keys(newErrors).length > 0) {
       const firstErrorQuestion = questions.find((q) => newErrors[q.name] || (q.name === 'primaryRole' && newErrors.otherRole));
       if (firstErrorQuestion) {
         const errorIndex = questions.indexOf(firstErrorQuestion) + 1;
         setStep(errorIndex);
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
+      return;
     }
+
+    setIsLoading(true); // Start loading state
+
+    // Prepare form data for API as JSON (since we're using Base64 strings)
+    const formDataToSend = {
+      ...formData,
+      profilePicture: formData.profilePicture, // Already Base64 from handleImageChange
+      pressCard: formData.pressCard ? await fileToBase64(formData.pressCard) : null, // Convert pressCard to Base64
+    };
+
+    try {
+      const response = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formDataToSend),
+      });
+      const result = await response.json();
+      if (response.ok) {
+        alert(result.message);
+        setStep(0); // Reset to intro page
+        setFormData({
+          fullName: '',
+          email: '',
+          location: '',
+          languages: '',
+          pronouns: '',
+          primaryRole: '',
+          otherRole: '',
+          mediaAffiliation: '',
+          portfolio: '',
+          domainContribution1: '',
+          domainContribution2: '',
+          domainContributionAdditional: '',
+          pressCard: null,
+          recognition: '',
+          subjects: '',
+          motivation: '',
+          affiliation: '',
+          affiliationDetails: '',
+          reason: '',
+          videoSubmission: '',
+          selfDeclaration: false,
+          profilePicture: null,
+        });
+        setPreviewImage(null);
+      } else {
+        setErrors(result.errors || { general: result.message });
+        const firstErrorQuestion = questions.find((q) => result.errors?.[q.name]);
+        if (firstErrorQuestion) {
+          const errorIndex = questions.indexOf(firstErrorQuestion) + 1;
+          setStep(errorIndex);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }
+    } catch (error) {
+      setErrors({ general: 'Failed to submit registration. Please try again.' });
+    } finally {
+      setIsLoading(false); // Stop loading state
+    }
+  };
+
+  // Helper function to convert file to Base64
+  const fileToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
   };
 
   const renderQuestion = (question) => {
@@ -371,6 +438,24 @@ export default function RegisterPage() {
           href="https://fonts.googleapis.com/css2?family=Helvetica:wght@400;500;600;700;800&display=swap"
           rel="stylesheet"
         />
+        <style>
+          {`
+            .loader {
+              border: 4px solid #f3f3f3;
+              border-top: 4px solid #fff;
+              border-radius: 50%;
+              width: 20px;
+              height: 20px;
+              animation: spin 1s linear infinite;
+              margin-left: 10px;
+              display: inline-block;
+            }
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+          `}
+        </style>
       </Head>
       <div className={styles.registerContainer}>
         <header className={styles.siteHeader}>
@@ -398,7 +483,7 @@ export default function RegisterPage() {
                 <div className={styles.intro}>
                   <p>
                     This is more than a form—it's your entry into a global consortium where journalism still holds the line. This
-                    space is built for reporters, by reporters,-added access is granted only to those who’ve earned their
+                    space is built for reporters, by reporters,added access is granted only to those who’ve earned their
                     place through real work in the field.
                   </p>
                   <p>
@@ -407,8 +492,7 @@ export default function RegisterPage() {
                     work is real. If you’re here, chances are you know exactly what that means.
                   </p>
                   <p>
-                    This is not for influencers, marketers, or AI-driven content farms. It’s for people who report,
-                    investigate, write, and stand by the truth.
+                    This space is reserved for those dedicated to original reporting and journalistic integrity. It’s for people who report, investigate, write, and stand by the truth.
                   </p>
                   <p>
                     <strong>If that’s you—welcome. Let’s begin.</strong>
@@ -447,7 +531,7 @@ export default function RegisterPage() {
                     </p>
                     <p className={styles.warning}>
                       <strong>Please note:</strong> Official access links and communication will only be sent from our
-                      verified email address — <a href="mailto:media_network@megheza.com">media_network@megheza.com</a>.
+                      verified email address — <a href="mailto:media.network@megheza.com">media.network@megheza.com</a>.
                       Do not respond to or engage with messages from any other source. We strongly advise you to avoid
                       third-party messages or unsolicited offers claiming to represent this platform.
                     </p>
@@ -455,8 +539,14 @@ export default function RegisterPage() {
                       <button type="button" className={styles.backButton} onClick={handleBack}>
                         Back
                       </button>
-                      <button type="submit" className={styles.submitButton}>
-                        Submit Application
+                      <button type="submit" className={styles.submitButton} disabled={isLoading}>
+                        {isLoading ? (
+                          <>
+                            Submitting <span className="loader"></span>
+                          </>
+                        ) : (
+                          'Submit Application'
+                        )}
                       </button>
                     </div>
                   </>
