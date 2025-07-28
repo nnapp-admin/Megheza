@@ -6,6 +6,9 @@ import styles from '../styles/LandingPage.module.css'; // Import CSS module for 
 export default function LandingPage() {
   const router = useRouter();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isLoginButtonDisabled, setIsLoginButtonDisabled] = useState(true); // Changed to true
+  const [phone, setPhone] = useState('');
+  const [password, setPassword] = useState('');
 
   useEffect(() => {
     // Scroll animations
@@ -73,7 +76,9 @@ export default function LandingPage() {
   };
 
   const handleLoginClick = () => {
-    setIsLoginModalOpen(true);
+    if (!phone && !password) {
+      setIsLoginModalOpen(true);
+    }
   };
 
   const handleCloseModal = () => {
@@ -87,9 +92,18 @@ export default function LandingPage() {
       phone: e.target.phone.value,
       password: e.target.password.value,
     });
+    setIsLoginButtonDisabled(true);
     // Redirect to dashboard regardless of input
     router.push('/dashboard');
     setIsLoginModalOpen(false);
+  };
+
+  const handleInputChange = (e) => {
+    if (e.target.name === 'phone') {
+      setPhone(e.target.value);
+    } else if (e.target.name === 'password') {
+      setPassword(e.target.value);
+    }
   };
 
   return (
@@ -115,7 +129,11 @@ export default function LandingPage() {
               <img src="/assets/Logo.png" alt="The Megheza Logo" className="logo-image" />
               Megheza
             </a>
-            <button className="cta-button" onClick={handleLoginClick}>
+            <button 
+              className="cta-button" 
+              onClick={handleLoginClick}
+              disabled={isLoginButtonDisabled}
+            >
               Login
             </button>
           </nav>
@@ -134,7 +152,11 @@ export default function LandingPage() {
                     <button className="cta-button" onClick={handleJoinClick}>
                       Join
                     </button>
-                    <button className="secondary-button" onClick={handleLoginClick}>
+                    <button 
+                      className="secondary-button" 
+                      onClick={handleLoginClick}
+                      disabled={isLoginButtonDisabled}
+                    >
                       Login
                     </button>
                   </div>
@@ -174,10 +196,8 @@ export default function LandingPage() {
 
         <footer>
           <div className="container">
-            <div className="footer-content">
-              <div className="footer-section">
-              </div>
-              <div className="footer-section">
+            <div className={styles.footerContent}>
+              <div className={styles.footerSection}>
                 <h3>Support</h3>
                 <ul>
                   <li><a href="/support#support">Help Center</a></li>
@@ -185,7 +205,7 @@ export default function LandingPage() {
                   <li><a href="/support#verification">Verification Guide</a></li>
                 </ul>
               </div>
-              <div className="footer-section">
+              <div className={styles.footerSection}>
                 <h3>Company</h3>
                 <ul>
                   <li><a href="/support#company">About Us</a></li>
@@ -193,7 +213,7 @@ export default function LandingPage() {
                   <li><a href="/support#terms">Terms of Service</a></li>
                 </ul>
               </div>
-              <div className="footer-section">
+              <div className={styles.footerSection}>
                 <h3>Consortium</h3>
                 <ul>
                   <li><a href="/support#consortium">Guidelines</a></li>
@@ -207,7 +227,7 @@ export default function LandingPage() {
               <p>Megheza™, Megheza Originals™, and related marks are the intellectual property of the Megheza consortium.</p>
               <p>Unauthorized use, scraping, or impersonation of verified profiles is strictly prohibited and prosecutable under international cyberlaw.</p>
               <div className="footer-contact">
-                <p>For all editorial, partnership, verification, or legal inquiries: <a href="mailto:media_network@megheza.com">media_network@megheza.com</a></p>
+                <p>For all editorial, partnership, verification, or legal inquiries: <a href="mailto:media_network@megheza.com" style={{ color: 'white', fontWeight: 'bold', textDecoration: 'none' }}>media_network@megheza.com</a></p>
               </div>
             </div>
           </div>
@@ -230,6 +250,8 @@ export default function LandingPage() {
                     name="phone"
                     placeholder="Enter your phone number"
                     required
+                    value={phone}
+                    onChange={handleInputChange}
                   />
                 </div>
                 <div className={styles.formGroup}>
@@ -240,6 +262,8 @@ export default function LandingPage() {
                     name="password"
                     placeholder="Enter your password"
                     required
+                    value={password}
+                    onChange={handleInputChange}
                   />
                 </div>
                 <button type="submit" className={styles.submitButton}>

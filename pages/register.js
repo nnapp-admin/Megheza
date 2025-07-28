@@ -1,34 +1,35 @@
 import { useState, useRef } from 'react';
 import Head from 'next/head';
+import Link from 'next/link'; // Added import for Link
 import styles from '../styles/Register.module.css';
 import { FaUpload } from 'react-icons/fa';
 
 // Define questions for each section
 const questions = [
-  // Section 1: Personal Informationbenefits:// Section 1: Personal Information
-  { section: 1, name: 'fullName', label: 'Benefits:// Full Name <span class="required-asterisk">*</span>', type: 'text', placeholder: 'Enter your full legal name', required: true },
+  // Section 1: Personal Information
+  { section: 1, name: 'fullName', label: 'Full Name<span class="required-asterisk">*</span>', type: 'text', placeholder: 'Enter your full legal name', required: true },
   { section: 1, name: 'profilePicture', label: 'Profile Picture (Optional, recommended size: 200x200px)', type: 'file', accept: 'image/*' },
-  { section: 1, name: 'email', label: 'Email Address <span class="required-asterisk">*</span>', type: 'email', placeholder: 'Enter your email', required: true },
-  { section: 1, name: 'location', label: 'Location (City, Country) <span class="required-asterisk">*</span>', type: 'text', placeholder: 'Enter your current city and country', required: true },
-  { section: 1, name: 'languages', label: 'Languages you report in', type: 'text', placeholder: 'List languages used professionally' },
+  { section: 1, name: 'email', label: 'Email Address<span class="required-asterisk">*</span>', type: 'email', placeholder: 'Enter your email', required: true },
+  { section: 1, name: 'location', label: 'Location (City, Country)<span class="required-asterisk">*</span>', type: 'text', placeholder: 'Enter your current city and country', required: true },
+  { section: 1, name: 'languages', label: 'Languages you report in<span class="required-asterisk">*</span>', type: 'text', placeholder: 'List languages used professionally',required: true },
   { section: 1, name: 'pronouns', label: 'Preferred Pronouns (Optional)', type: 'text', placeholder: 'e.g., she/her, he/him, they/them' },
   // Section 2: Journalism Credentials
-  { section: 2, name: 'primaryRole', label: 'Primary Role <span class="required-asterisk">*</span>', type: 'role', required: true },
-  { section: 2, name: 'mediaAffiliation', label: 'Current Media Affiliation(s)', type: 'text', placeholder: 'Enter media organization or "Freelance"' },
+  { section: 2, name: 'primaryRole', label: 'Primary Role<span class="required-asterisk">*</span>', type: 'role', required: true },
+  { section: 2, name: 'mediaAffiliation', label: 'Current Media Affiliation(s)<span class="required-asterisk">*</span>', type: 'text', placeholder: 'Enter media organization or "Freelance"',required: true },
   { section: 2, name: 'portfolio', label: 'Official Website or Portfolio (Optional)', type: 'url', placeholder: 'Enter your professional website or portfolio link' },
-  { section: 2, name: 'domainContribution1', label: 'Domain Contribution Link 1 <span class="required-asterisk">*</span>', type: 'url', placeholder: 'We’re excited to explore your work — please share a link', required: true },
+  { section: 2, name: 'domainContribution1', label: 'Domain Contribution Link 1<span class="required-asterisk">*</span>', type: 'url', placeholder: 'We’re excited to explore your work — please share a link', required: true },
   { section: 2, name: 'domainContributionAdditional', label: 'Additional Domain Contribution Link (Optional)', type: 'url', placeholder: 'Additional link (optional)' },
   { section: 2, name: 'pressCard', label: 'Press Card / Journalist ID Upload (Optional)', type: 'file', accept: 'image/*,.pdf' },
   // Section 3: Verification Questions
-  { section: 3, name: 'recognition', label: 'How would you like to be recognized as a journalist? <span class="required-asterisk">*</span>', type: 'textarea', placeholder: 'Provide a brief statement that reflects your professional identity and journalistic approach.', required: true, maxLength: 500 },
-  { section: 3, name: 'subjects', label: 'What subjects or areas do you primarily report on? <span class="required-asterisk">*</span>', type: 'textarea', placeholder: 'Examples: politics, environment, technology, social justice, gender, conflict, culture, etc.', required: true, maxLength: 500 },
-  { section: 3, name: 'motivation', label: 'What motivated you to pursue a career in journalism? <span class="required-asterisk">*</span>', type: 'textarea', placeholder: 'Share a short paragraph outlining the inspiration or turning point that led you to this field.', required: true, maxLength: 500 },
-  { section: 3, name: 'affiliation', label: 'Have you been affiliated with any newsroom, media outlet, or journalist association? <span class="required-asterisk">*</span>', type: 'affiliation', required: true },
+  { section: 3, name: 'recognition', label: 'How would you like to be recognized as a journalist?<span class="required-asterisk">*</span>', type: 'textarea', placeholder: 'Provide a brief statement that reflects your professional identity and journalistic approach.', required: true, maxLength: 500 },
+  { section: 3, name: 'subjects', label: 'What subjects or areas do you primarily report on?<span class="required-asterisk">*</span>', type: 'textarea', placeholder: 'Examples: politics, environment, technology, social justice, gender, conflict, culture, etc.', required: true, maxLength: 500 },
+  { section: 3, name: 'motivation', label: 'What motivated you to pursue a career in journalism?<span class="required-asterisk">*</span>', type: 'textarea', placeholder: 'Share a short paragraph outlining the inspiration or turning point that led you to this field.', required: true, maxLength: 500 },
+  { section: 3, name: 'affiliation', label: 'Have you been affiliated with any newsroom, media outlet, or journalist association?<span class="required-asterisk">*</span>', type: 'affiliation', required: true },
   { section: 3, name: 'affiliationDetails', label: 'Affiliation Details (if Yes)', type: 'text', placeholder: 'Yes (please specify)', conditional: (formData) => formData.affiliation === 'Yes', maxLength: 500 },
-  { section: 3, name: 'reason', label: 'What is your reason for seeking access to this verified space? <span class="required-asterisk">*</span>', type: 'textarea', placeholder: 'Explain briefly what you hope to gain or contribute.', required: true, maxLength: 500 },
+  { section: 3, name: 'reason', label: 'What is your reason for seeking access to this verified space?<span class="required-asterisk">*</span>', type: 'textarea', placeholder: 'Explain briefly what you hope to gain or contribute.', required: true, maxLength: 500 },
   { section: 3, name: 'videoSubmission', label: '(Optional) Submit a short video (1–2 minutes) introducing yourself and your intent for joining. This may include your background, values, or vision for how you intend to use this platform. Upload to Google Drive, Dropbox, or YouTube and provide the link below.', type: 'url', placeholder: 'Video Submission Link' },
   // Section 4: Self-Declaration
-  { section: 4, name: 'selfDeclaration', label: 'Self-Declaration <span class="required-asterisk">*</span>', type: 'checkbox', required: true, text: 'I hereby confirm that I am an active, working journalist. I acknowledge that this platform is intended exclusively for verified media professionals and understand that all submitted information will undergo manual review. I accept that if my application is not approved, all associated data will be securely deleted. I further understand that any false, misleading, or unverifiable claims may result in permanent disqualification from access. I agree to uphold the principles of integrity, accuracy, and professional respect in all interactions within this space.' },
+  { section: 4, name: 'selfDeclaration', label: 'Self-Declaration<span class="required-asterisk">*</span>', type: 'checkbox', required: true, text: 'I hereby confirm that I am an active, working journalist. I acknowledge that this platform is intended exclusively for verified media professionals and understand that all submitted information will undergo manual review. I accept that if my application is not approved, all associated data will be securely deleted. I further understand that any false, misleading, or unverifiable claims may result in permanent disqualification from access. I agree to uphold the principles of integrity, accuracy, and professional respect in all interactions within this space.' },
 ];
 
 // Total number of questions
@@ -374,10 +375,10 @@ export default function RegisterPage() {
       <div className={styles.registerContainer}>
         <header className={styles.siteHeader}>
           <nav className={styles.siteNav}>
-            <a href="#" className={styles.logo}>
+            <Link href="/landingPage" className={styles.logo}>
               <img src="/assets/Logo.png" alt="The Megheza Logo" className={styles.logoImage} />
               Megheza
-            </a>
+            </Link>
           </nav>
         </header>
         <main className={styles.main}>
@@ -467,7 +468,7 @@ export default function RegisterPage() {
         <footer className={styles.siteFooter}>
           <div className={styles.container}>
             <div className={styles.footerBottom}>
-              <p>Copyright © 2025 The Megheza. All Rights Reserved.</p>
+              <p>Copyright © 2025 Megheza. All Rights Reserved.</p>
             </div>
           </div>
         </footer>

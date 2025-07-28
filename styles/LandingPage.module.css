@@ -1,4 +1,3 @@
-/* styles/LandingPage.module.css */
 .modalOverlay {
   position: fixed;
   top: 0;
@@ -98,7 +97,65 @@
   box-shadow: 0 6px 20px rgba(139, 0, 0, 0.4);
 }
 
+/* Footer Styles */
+.footerContent {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background-color: #1a1a1a00; /* Matches the background where the text is present */
+  padding: 20px 0;
+  flex-wrap: nowrap;
+}
+
+.footerSection {
+  flex: 1;
+  text-align: left;
+  margin: 0 20px;
+  min-width: 0;
+}
+
+.footerSection h3 {
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.footerSection ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footerSection ul li {
+  color: #fff;
+  margin-bottom: 5px;
+}
+
+.footerSection ul li a {
+  color: #fff;
+  text-decoration: none;
+}
+
 /* Responsive Design */
+@media (max-width: 1024px) {
+  .modal {
+    max-width: 90%;
+    padding: 1.5rem;
+  }
+
+  .modal h2 {
+    font-size: 1.5rem;
+  }
+
+  .footerContent {
+    flex-wrap: nowrap;
+    justify-content: center;
+  }
+
+  .footerSection {
+    margin: 0 10px;
+    flex-basis: 30%;
+  }
+}
+
 @media (max-width: 768px) {
   .modal {
     max-width: 90%;
@@ -107,5 +164,15 @@
 
   .modal h2 {
     font-size: 1.5rem;
+  }
+
+  .footerContent {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .footerSection {
+    margin: 10px 0;
+    text-align: center;
   }
 }

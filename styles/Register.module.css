@@ -87,7 +87,9 @@
 }
 
 .intro p:not(:last-child) {
-  text-align: justify; /* Justified alignment for first three paragraphs */
+  text-align: left; /* Justified alignment for first three paragraphs */
+  font-size: 1rem !important;
+
 }
 
 .intro p:last-child {
@@ -340,7 +342,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 12px;
+  font-size: 16px;
 }
 
 .note,
@@ -399,7 +401,7 @@
 
 .error {
   color: #ff0000;
-  font-size: 0.9rem;
+  font-size: 0.8rem !important;
   margin-top: 0.3rem;
 }
 
