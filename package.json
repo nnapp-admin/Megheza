@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "dotenv": "^17.2.1",
     "mongoose": "^8.16.5",
     "multer": "^2.0.2",
     "next": "^14.2.3",
@@ -16,7 +17,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^5.5.0",
-    "react-pdf": "^7.7.0"
+    "react-pdf": "^7.7.0",
+    "sanitize-html": "^2.17.0"
   },
   "devDependencies": {
     "@svgr/webpack": "^8.1.0",

@@ -1,3 +1,4 @@
+/* LandingPage.module.css */
 .modalOverlay {
   position: fixed;
   top: 0;
@@ -112,6 +113,19 @@
   text-align: left;
   margin: 0 20px;
   min-width: 0;
+}
+
+/* Center-align footer content on large screens */
+@media (min-width: 1025px) {
+  .footerContent {
+    justify-content: center;
+    max-width: 800px; /* Adjust this value to control the width of the centered content */
+    margin: 0 auto; /* Centers the container horizontally */
+  }
+
+  .footerSection {
+    text-align: center; /* Center-align text within each section */
+  }
 }
 
 .footerSection h3 {

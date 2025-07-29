@@ -798,12 +798,6 @@ export default function Support() {
             </div>
           </section>
 
-          <section className={`${styles.section} scroll-reveal`} id="official-contact">
-            <div className={styles.container}>
-              <h2>Official Contact</h2>
-              <p>For all editorial, partnership, verification, or legal inquiries:</p>
-            </div>
-          </section>
 
           <section className={styles.ctaSection}>
             <div className={styles.container}>
