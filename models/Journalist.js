@@ -5,52 +5,37 @@ const journalistSchema = new mongoose.Schema({
   fullName: {
     type: String,
     required: [true, 'Full name is required'],
-    trim: true,
     maxlength: [100, 'Full name cannot exceed 100 characters'],
-  },
-  profilePicture: {
-    type: String, // Base64 string, optional
-    validate: {
-      validator: function (v) {
-        if (!v) return true; // Allow null/undefined
-        const isValidBase64 = /^data:image\/(jpeg|png|gif);base64,/.test(v);
-        if (!isValidBase64) return false;
-        // Validate size (150 KB) by decoding Base64
-        const buffer = Buffer.from(v.split(',')[1], 'base64');
-        return buffer.length <= 150 * 1024; // 150 KB
-      },
-      message: props => `${props.path} must be a valid Base64 image (JPEG, PNG, GIF) and not exceed 150 KB`,
-    },
+    trim: true,
   },
   email: {
     type: String,
     required: [true, 'Email is required'],
-    trim: true,
-    lowercase: true,
+    unique: true,
+    index: true, // Define index here
     match: [/^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'Invalid email format'],
-    unique: true, // Prevent duplicate emails
+    trim: true,
   },
   location: {
     type: String,
     required: [true, 'Location is required'],
-    trim: true,
     maxlength: [100, 'Location cannot exceed 100 characters'],
+    trim: true,
   },
   languages: {
     type: String,
     required: [true, 'Languages are required'],
-    trim: true,
     maxlength: [100, 'Languages cannot exceed 100 characters'],
+    trim: true,
   },
   pronouns: {
     type: String,
-    trim: true,
     maxlength: [50, 'Pronouns cannot exceed 50 characters'],
+    trim: true,
   },
   primaryRole: {
     type: String,
     required: [true, 'Primary role is required'],
-    trim: true,
     enum: [
       'Reporter',
       'Editor',
@@ -63,68 +48,66 @@ const journalistSchema = new mongoose.Schema({
   },
   otherRole: {
     type: String,
-    trim: true,
     maxlength: [100, 'Other role cannot exceed 100 characters'],
-    required: [
-      function () {
-        return this.primaryRole === 'Other';
-      },
-      'Other role is required when primary role is "Other"',
-    ],
+    trim: true,
   },
   mediaAffiliation: {
     type: String,
     required: [true, 'Media affiliation is required'],
-    trim: true,
     maxlength: [200, 'Media affiliation cannot exceed 200 characters'],
+    trim: true,
   },
   portfolio: {
     type: String,
-    trim: true,
     match: [/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/, 'Invalid URL format'],
+    trim: true,
   },
   domainContribution1: {
     type: String,
     required: [true, 'Domain contribution link is required'],
-    trim: true,
     match: [/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/, 'Invalid URL format'],
+    trim: true,
   },
   domainContributionAdditional: {
     type: String,
-    trim: true,
     match: [/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/, 'Invalid URL format'],
+    trim: true,
   },
   pressCard: {
-    type: String, // Base64 string, optional
+    type: String, // Base64-encoded string
     validate: {
       validator: function (v) {
-        if (!v) return true; // Allow null/undefined
-        const isValidBase64 = /^data:(image\/(jpeg|png|gif)|application\/pdf);base64,/.test(v);
-        if (!isValidBase64) return false;
-        // Validate size (150 KB) by decoding Base64
-        const buffer = Buffer.from(v.split(',')[1], 'base64');
-        return buffer.length <= 150 * 1024; // 150 KB
+        return !v || /^data:(image\/[a-z]+|application\/pdf);base64,/.test(v);
       },
-      message: props => `${props.path} must be a valid Base64 image (JPEG, PNG, GIF) or PDF and not exceed 150 KB`,
+      message: 'Invalid file format for press card',
+    },
+  },
+  profilePicture: {
+    type: String, // Base64-encoded string
+    validate: {
+      validator: function (v) {
+        return !v || /^data:image\/[a-z]+;base64,/.test(v);
+      },
+      message: 'Invalid file format for profile picture',
     },
   },
   recognition: {
     type: String,
     required: [true, 'Recognition statement is required'],
+    maxlength: [500, 'Recognition cannot exceed 500 characters'],
     trim: true,
-    maxlength: [500, 'Recognition statement cannot exceed 500 characters'],
   },
   subjects: {
     type: String,
     required: [true, 'Subjects are required'],
-    trim: true,
     maxlength: [500, 'Subjects cannot exceed 500 characters'],
+    trim: true,
   },
   motivation: {
     type: String,
     required: [true, 'Motivation is required'],
-    trim: true,
     maxlength: [500, 'Motivation cannot exceed 500 characters'],
+    trim: true,
   },
   affiliation: {
     type: String,
@@ -133,25 +116,19 @@ const journalistSchema = new mongoose.Schema({
   },
   affiliationDetails: {
     type: String,
-    trim: true,
     maxlength: [500, 'Affiliation details cannot exceed 500 characters'],
-    required: [
-      function () {
-        return this.affiliation === 'Yes';
-      },
-      'Affiliation details are required when affiliation is "Yes"',
-    ],
+    trim: true,
   },
   reason: {
     type: String,
-    required: [true, 'Reason for access is required'],
-    trim: true,
+    required: [true, 'Reason for seeking access is required'],
     maxlength: [500, 'Reason cannot exceed 500 characters'],
+    trim: true,
   },
   videoSubmission: {
     type: String,
-    trim: true,
     match: [/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/, 'Invalid URL format'],
+    trim: true,
   },
   selfDeclaration: {
     type: Boolean,
@@ -161,45 +138,16 @@ const journalistSchema = new mongoose.Schema({
     type: Boolean,
     required: [true, 'Terms agreement is required'],
   },
-  Verified: {
-    type: String,
-    default: 'no',
-    enum: ['yes', 'no'],
-  },
   createdAt: {
     type: Date,
     default: Date.now,
   },
 });
 
-// Indexes for performance
-journalistSchema.index({ email: 1 }); // Unique index for email
-journalistSchema.index({ Verified: 1, createdAt: 1 }); // For document deletion queries
+// Remove duplicate index definition
+// Do NOT include journalistSchema.index({ email: 1 }) here, as it's already defined with index: true
 
-// Pre-save hook to sanitize inputs (optional, as API already sanitizes)
-journalistSchema.pre('save', function (next) {
-  // Additional sanitization if needed (API already handles most)
-  this.fullName = this.fullName.replace(/<[^>]+>/g, ''); // Strip HTML tags
-  this.email = this.email.replace(/<[^>]+>/g, '');
-  this.location = this.location.replace(/<[^>]+>/g, '');
-  this.languages = this.languages.replace(/<[^>]+>/g, '');
-  if (this.pronouns) this.pronouns = this.pronouns.replace(/<[^>]+>/g, '');
-  this.primaryRole = this.primaryRole.replace(/<[^>]+>/g, '');
-  if (this.otherRole) this.otherRole = this.otherRole.replace(/<[^>]+>/g, '');
-  this.mediaAffiliation = this.mediaAffiliation.replace(/<[^>]+>/g, '');
-  if (this.portfolio) this.portfolio = this.portfolio.replace(/<[^>]+>/g, '');
-  this.domainContribution1 = this.domainContribution1.replace(/<[^>]+>/g, '');
-  if (this.domainContributionAdditional)
-    this.domainContributionAdditional = this.domainContributionAdditional.replace(/<[^>]+>/g, '');
-  this.recognition = this.recognition.replace(/<[^>]+>/g, '');
-  this.subjects = this.subjects.replace(/<[^>]+>/g, '');
-  this.motivation = this.motivation.replace(/<[^>]+>/g, '');
-  this.affiliation = this.affiliation.replace(/<[^>]+>/g, '');
-  if (this.affiliationDetails) this.affiliationDetails = this.affiliationDetails.replace(/<[^>]+>/g, '');
-  this.reason = this.reason.replace(/<[^>]+>/g, '');
-  if (this.videoSubmission) this.videoSubmission = this.videoSubmission.replace(/<[^>]+>/g, '');
-  next();
-});
+// Singleton pattern to prevent OverwriteModelError
+const Journalist = mongoose.models.Journalist || mongoose.model('Journalist', journalistSchema);
 
-const Journalist = mongoose.model('Journalist', journalistSchema);
 export default Journalist;

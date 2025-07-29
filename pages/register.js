@@ -1,4 +1,5 @@
-import { useState, useRef } from 'react';
+// pages/register.js
+import { useState, useRef, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import styles from '../styles/Register.module.css';
@@ -7,18 +8,18 @@ import { FaUpload } from 'react-icons/fa';
 // Define questions for each section
 const questions = [
   // Section 1: Personal Information
-  { section: 1, name: 'fullName', label: 'Full Name<span class="required-asterisk">*</span>', type: 'text', placeholder: 'Enter your full legal name', required: true },
-  { section: 1, name: 'profilePicture', label: 'Profile Picture (Optional, Maximum file size: 150 KB)', type: 'file', accept: 'image/*' },
+  { section: 1, name: 'fullName', label: 'Full Name<span class="required-asterisk">*</span>', type: 'text', placeholder: 'Enter your full legal name', required: true, maxLength: 100 },
+  { section: 1, name: 'profilePicture', label: 'Profile Picture (Optional, Maximum file size: 150 KB)', type: 'file', accept: 'image/jpeg,image/png,image/gif' },
   { section: 1, name: 'email', label: 'Email Address<span class="required-asterisk">*</span>', type: 'email', placeholder: 'Enter your email', required: true },
-  { section: 1, name: 'location', label: 'Location (City, Country)<span class="required-asterisk">*</span>', type: 'text', placeholder: 'Enter your current city and country', required: true },
-  { section: 1, name: 'languages', label: 'Languages you report in<span class="required-asterisk">*</span>', type: 'text', placeholder: 'List languages used professionally', required: true },
+  { section: 1, name: 'location', label: 'Location (City, Country)<span class="required-asterisk">*</span>', type: 'text', placeholder: 'Enter your current city and country', required: true, maxLength: 100 },
+  { section: 1, name: 'languages', label: 'Languages you report in<span class="required-asterisk">*</span>', type: 'text', placeholder: 'List languages used professionally', required: true, maxLength: 100 },
   // Section 2: Journalism Credentials
   { section: 2, name: 'primaryRole', label: 'Primary Role<span class="required-asterisk">*</span>', type: 'role', required: true },
-  { section: 2, name: 'mediaAffiliation', label: 'Current Media Affiliation(s)<span class="required-asterisk">*</span>', type: 'text', placeholder: 'Enter media organization or "Freelance"', required: true },
+  { section: 2, name: 'mediaAffiliation', label: 'Current Media Affiliation(s)<span class="required-asterisk">*</span>', type: 'text', placeholder: 'Enter media organization or "Freelance"', required: true, maxLength: 200 },
   { section: 2, name: 'portfolio', label: 'Official Website or Portfolio (Optional)', type: 'url', placeholder: 'Enter your professional website or portfolio link' },
   { section: 2, name: 'domainContribution1', label: 'Domain Contribution Link<span class="required-asterisk">*</span>', type: 'url', placeholder: 'We’re excited to explore your work — please share a link', required: true },
   { section: 2, name: 'domainContributionAdditional', label: 'Additional Domain Contribution Link (Optional)', type: 'url', placeholder: 'Additional link (optional)' },
-  { section: 2, name: 'pressCard', label: 'Press Card / Journalist ID Upload (Optional, Maximum file size: 150 KB)', type: 'file', accept: 'image/*,.pdf' },
+  { section: 2, name: 'pressCard', label: 'Press Card / Journalist ID Upload (Optional, Maximum file size: 150 KB)', type: 'file', accept: 'image/jpeg,image/png,image/gif,application/pdf' },
   // Section 3: Verification Questions
   { section: 3, name: 'recognition', label: 'How would you like to be recognized as a journalist?<span class="required-asterisk">*</span>', type: 'textarea', placeholder: 'Provide a brief statement that reflects your professional identity and journalistic approach.', required: true, maxLength: 500 },
   { section: 3, name: 'subjects', label: 'What subjects or areas do you primarily report on?<span class="required-asterisk">*</span>', type: 'textarea', placeholder: 'Examples: politics, environment, technology, social justice, gender, conflict, culture, etc.', required: true, maxLength: 500 },
@@ -29,7 +30,7 @@ const questions = [
   { section: 3, name: 'videoSubmission', label: '(Optional) Submit a short video (1–2 minutes) introducing yourself and your intent for joining. This may include your background, values, or vision for how you intend to use this platform. Upload to Google Drive, Dropbox, or YouTube and provide the link below.', type: 'url', placeholder: 'Video Submission Link' },
   // Section 4: Self-Declaration
   { section: 4, name: 'selfDeclaration', label: 'Self-Declaration<span class="required-asterisk">*</span>', type: 'checkbox', required: true, text: 'I hereby confirm that I am an active, working journalist. I acknowledge that this platform is intended exclusively for verified media professionals and understand that all submitted information will undergo manual review. I accept that if my application is not approved, all associated data will be securely deleted. I further understand that any false, misleading, or unverifiable claims may result in permanent disqualification from access. I agree to uphold the principles of integrity, accuracy, and professional respect in all interactions within this space.' },
-  { section: 4, name: 'termsAgreement', label: 'Terms Agreement<span class="required-asterisk">*</span>', type: 'checkbox', required: true, text: 'I agree to the <span class="termsLink">Terms of Use and Privacy Policy</span>.' }
+  { section: 4, name: 'termsAgreement', label: 'Terms Agreement<span class="required-asterisk">*</span>', type: 'checkbox', required: true, text: 'I agree to the <span class="termsLink">Terms of Use and Privacy Policy</span>.' },
 ];
 
 // Total number of questions
@@ -48,7 +49,6 @@ export default function RegisterPage() {
     mediaAffiliation: '',
     portfolio: '',
     domainContribution1: '',
-    domainContribution2: '',
     domainContributionAdditional: '',
     pressCard: null,
     recognition: '',
@@ -59,19 +59,34 @@ export default function RegisterPage() {
     reason: '',
     videoSubmission: '',
     selfDeclaration: false,
-    termsAgreement: false, // Added for new checkbox
+    termsAgreement: false,
     profilePicture: null,
   });
   const [previewImage, setPreviewImage] = useState(null);
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal
+  const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const fileInputRef = useRef(null);
   const pressCardInputRef = useRef(null);
 
+  // Handle Escape key to close modals
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === 'Escape' && isSuccessModalOpen) closeSuccessModal();
+      if (e.key === 'Escape' && isTermsModalOpen) closeTermsModal();
+    };
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [isSuccessModalOpen, isTermsModalOpen]);
+
   const handleInputChange = (e) => {
     const { name, value, type, checked, files } = e.target;
-    if (type !== 'file' && type !== 'checkbox' && value.length > 500) return;
+    const maxLength = questions.find((q) => q.name === name)?.maxLength || 500;
+    if (type !== 'file' && type !== 'checkbox' && value.length > maxLength) {
+      setErrors((prev) => ({ ...prev, [name]: `Cannot exceed ${maxLength} characters` }));
+      return;
+    }
     setFormData((prev) => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : type === 'file' ? files[0] : value,
@@ -80,18 +95,22 @@ export default function RegisterPage() {
   };
 
   const handleRoleSelect = (role) => {
-    setFormData((prev) => ({ ...prev, primaryRole: role }));
-    setErrors((prev) => ({ ...prev, primaryRole: '' }));
+    setFormData((prev) => ({ ...prev, primaryRole: role, otherRole: role === 'Other' ? prev.otherRole : '' }));
+    setErrors((prev) => ({ ...prev, primaryRole: '', otherRole: '' }));
   };
 
   const handleAffiliationSelect = (affiliation) => {
-    setFormData((prev) => ({ ...prev, affiliation }));
-    setErrors((prev) => ({ ...prev, affiliation: '' }));
+    setFormData((prev) => ({ ...prev, affiliation, affiliationDetails: affiliation === 'Yes' ? prev.affiliationDetails : '' }));
+    setErrors((prev) => ({ ...prev, affiliation: '', affiliationDetails: '' }));
   };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      if (file.size > 150 * 1024) {
+        setErrors((prev) => ({ ...prev, profilePicture: 'File size exceeds 150 KB limit' }));
+        return;
+      }
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreviewImage(reader.result);
@@ -105,37 +124,87 @@ export default function RegisterPage() {
     setErrors((prev) => ({ ...prev, profilePicture: '' }));
   };
 
+  const handlePressCardChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 150 * 1024) {
+        setErrors((prev) => ({ ...prev, pressCard: 'File size exceeds 150 KB limit' }));
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData((prev) => ({ ...prev, pressCard: reader.result }));
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setFormData((prev) => ({ ...prev, pressCard: null }));
+    }
+    setErrors((prev) => ({ ...prev, pressCard: '' }));
+  };
+
   const handleRemoveImage = () => {
     setPreviewImage(null);
     setFormData((prev) => ({ ...prev, profilePicture: null }));
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   const handleRemovePressCard = () => {
     setFormData((prev) => ({ ...prev, pressCard: null }));
-    if (pressCardInputRef.current) {
-      pressCardInputRef.current.value = '';
-    }
+    if (pressCardInputRef.current) pressCardInputRef.current.value = '';
   };
 
-  const openModal = () => {
-    setIsModalOpen(true);
+  const openTermsModal = () => {
+    setIsTermsModalOpen(true);
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
+  const closeTermsModal = () => {
+    setIsTermsModalOpen(false);
+  };
+
+  const closeSuccessModal = () => {
+    setIsSuccessModalOpen(false);
+    setStep(0);
+    setFormData({
+      fullName: '',
+      email: '',
+      location: '',
+      languages: '',
+      pronouns: '',
+      primaryRole: '',
+      otherRole: '',
+      mediaAffiliation: '',
+      portfolio: '',
+      domainContribution1: '',
+      domainContributionAdditional: '',
+      pressCard: null,
+      recognition: '',
+      subjects: '',
+      motivation: '',
+      affiliation: '',
+      affiliationDetails: '',
+      reason: '',
+      videoSubmission: '',
+      selfDeclaration: false,
+      termsAgreement: false,
+      profilePicture: null,
+    });
+    setPreviewImage(null);
   };
 
   const validateQuestion = (question) => {
     const newErrors = {};
-    const { name, required, conditional } = question;
+    const { name, required, conditional, maxLength } = question;
 
     if (conditional && !conditional(formData)) return true;
 
     if (required && !formData[name]) {
       newErrors[name] = 'Answer required to continue';
+    } else if (name === 'email' && formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Invalid email format';
+    } else if (['portfolio', 'domainContribution1', 'domainContributionAdditional', 'videoSubmission'].includes(name) && formData[name] && !/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/.test(formData[name])) {
+      newErrors[name] = 'Invalid URL format';
+    } else if (maxLength && formData[name] && formData[name].length > maxLength) {
+      newErrors[name] = `Cannot exceed ${maxLength} characters`;
     } else if (name === 'primaryRole' && formData.primaryRole === 'Other' && !formData.otherRole) {
       newErrors.otherRole = 'Answer required to continue';
     } else if (name === 'affiliationDetails' && formData.affiliation === 'Yes' && !formData.affiliationDetails) {
@@ -166,6 +235,15 @@ export default function RegisterPage() {
       if (question.required && !formData[question.name]) {
         newErrors[question.name] = 'Answer required to continue';
       }
+      if (question.name === 'email' && formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+        newErrors.email = 'Invalid email format';
+      }
+      if (['portfolio', 'domainContribution1', 'domainContributionAdditional', 'videoSubmission'].includes(question.name) && formData[question.name] && !/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/.test(formData[question.name])) {
+        newErrors[question.name] = 'Invalid URL format';
+      }
+      if (question.maxLength && formData[question.name] && formData[question.name].length > question.maxLength) {
+        newErrors[question.name] = `Cannot exceed ${question.maxLength} characters`;
+      }
       if (question.name === 'primaryRole' && formData.primaryRole === 'Other' && !formData.otherRole) {
         newErrors.otherRole = 'Answer required to continue';
       }
@@ -173,7 +251,6 @@ export default function RegisterPage() {
         newErrors.affiliationDetails = 'Answer required to continue';
       }
     });
-    setErrors(newErrors);
 
     if (Object.keys(newErrors).length > 0) {
       const firstErrorQuestion = questions.find((q) => newErrors[q.name] || (q.name === 'primaryRole' && newErrors.otherRole));
@@ -182,53 +259,21 @@ export default function RegisterPage() {
         setStep(errorIndex);
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
+      setErrors(newErrors);
       return;
     }
 
     setIsLoading(true);
 
-    const formDataToSend = {
-      ...formData,
-      profilePicture: formData.profilePicture,
-      pressCard: formData.pressCard ? await fileToBase64(formData.pressCard) : null,
-    };
-
     try {
       const response = await fetch('/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formDataToSend),
+        body: JSON.stringify(formData),
       });
       const result = await response.json();
       if (response.ok) {
-        alert(result.message);
-        setStep(0);
-        setFormData({
-          fullName: '',
-          email: '',
-          location: '',
-          languages: '',
-          pronouns: '',
-          primaryRole: '',
-          otherRole: '',
-          mediaAffiliation: '',
-          portfolio: '',
-          domainContribution1: '',
-          domainContribution2: '',
-          domainContributionAdditional: '',
-          pressCard: null,
-          recognition: '',
-          subjects: '',
-          motivation: '',
-          affiliation: '',
-          affiliationDetails: '',
-          reason: '',
-          videoSubmission: '',
-          selfDeclaration: false,
-          termsAgreement: false, // Reset termsAgreement
-          profilePicture: null,
-        });
-        setPreviewImage(null);
+        setIsSuccessModalOpen(true);
       } else {
         setErrors(result.errors || { general: result.message });
         const firstErrorQuestion = questions.find((q) => result.errors?.[q.name]);
@@ -245,17 +290,8 @@ export default function RegisterPage() {
     }
   };
 
-  const fileToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result);
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-  };
-
   // Modal component
-  const Modal = ({ isOpen, onClose, children }) => {
+  const Modal = ({ isOpen, onClose, children, title }) => {
     if (!isOpen) return null;
 
     return (
@@ -265,6 +301,7 @@ export default function RegisterPage() {
             ×
           </button>
           <div className={styles.modalContent}>
+            {title && <h2>{title}</h2>}
             {children}
           </div>
         </div>
@@ -289,7 +326,6 @@ export default function RegisterPage() {
       <p>We strictly avoid collecting unnecessary personal information—no financial account data, no biometric identifiers, and absolutely no surveillance-based behavior tracking.</p>
       <h3>2. How We Use Your Data</h3>
       <p>Our philosophy on data use is direct: all information is processed for the sole benefit of the verified journalist community. Data is never sold, rented, or monetized through third-party advertising.</p>
-      <p>We use your information to:</p>
       <ul>
         <li>Verify the authenticity of your journalistic credentials</li>
         <li>Facilitate secure communication among verified professionals globally</li>
@@ -441,6 +477,13 @@ export default function RegisterPage() {
     </>
   );
 
+  const successContent = (
+    <>
+      <p>Thank you—your commitment to truth-driven reporting matters here.</p>
+      <p>We're honored to review your application.</p>
+    </>
+  );
+
   const renderQuestion = (question) => {
     const { name, label, type, placeholder, accept, required, maxLength, text } = question;
 
@@ -498,7 +541,7 @@ export default function RegisterPage() {
               name={name}
               accept={accept}
               className={styles.fileInput}
-              onChange={name === 'profilePicture' ? handleImageChange : handleInputChange}
+              onChange={name === 'profilePicture' ? handleImageChange : handlePressCardChange}
               ref={name === 'profilePicture' ? fileInputRef : pressCardInputRef}
             />
             {name === 'profilePicture' ? (
@@ -520,7 +563,7 @@ export default function RegisterPage() {
               <div className={styles.uploadContainer}>
                 {formData.pressCard ? (
                   <div className={styles.uploadedFileContainer}>
-                    <span className={styles.uploadedFileName}>{formData.pressCard.name}</span>
+                    <span className={styles.uploadedFileName}>{formData.pressCard.name || 'Uploaded File'}</span>
                     <button type="button" className={styles.removeButton} onClick={handleRemovePressCard}>
                       ×
                     </button>
@@ -567,7 +610,7 @@ export default function RegisterPage() {
                 value={formData.otherRole}
                 onChange={handleInputChange}
                 className={styles.otherInput}
-                maxLength={500}
+                maxLength={100}
               />
             )}
             {errors.primaryRole && <p className={styles.error}>{errors.primaryRole}</p>}
@@ -609,7 +652,7 @@ export default function RegisterPage() {
                 dangerouslySetInnerHTML={{ __html: text }}
                 onClick={(e) => {
                   if (e.target.classList.contains('termsLink')) {
-                    openModal();
+                    openTermsModal();
                   }
                 }}
               />
@@ -752,14 +795,18 @@ export default function RegisterPage() {
                         )}
                       </button>
                     </div>
+                    {errors.general && <p className={styles.error}>{errors.general}</p>}
                   </>
                 )}
               </form>
             </div>
           </section>
         </main>
-        <Modal isOpen={isModalOpen} onClose={closeModal}>
+        <Modal isOpen={isTermsModalOpen} onClose={closeTermsModal} title="Terms and Privacy Policy">
           {termsContent}
+        </Modal>
+        <Modal isOpen={isSuccessModalOpen} onClose={closeSuccessModal} title="Application Submitted">
+          {successContent}
         </Modal>
         <footer className={styles.siteFooter}>
           <div className={styles.container}>
