@@ -98,12 +98,54 @@
   box-shadow: 0 6px 20px rgba(139, 0, 0, 0.4);
 }
 
-/* Footer Styles */
+.cta-button {
+  background: linear-gradient(135deg, #8b0000, #8b0000);
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 50px;
+  font-family: Helvetica, sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cta-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(139, 0, 0, 0.4);
+}
+
+.cta-button-large {
+  padding: 1rem 2rem;
+}
+
+.secondary-button {
+  background: #333;
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 50px;
+  font-family: Helvetica, sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.secondary-button:hover {
+  background: #444;
+}
+
+.heroWrapper {
+  /* No styles needed here; just a placeholder to anchor the :global selector */
+}
+
 .footerContent {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  background-color: #1a1a1a00; /* Matches the background where the text is present */
+  background-color: #1a1a1a00;
   padding: 20px 0;
   flex-wrap: nowrap;
 }
@@ -115,16 +157,14 @@
   min-width: 0;
 }
 
-/* Center-align footer content on large screens */
 @media (min-width: 1025px) {
   .footerContent {
     justify-content: center;
-    max-width: 800px; /* Adjust this value to control the width of the centered content */
-    margin: 0 auto; /* Centers the container horizontally */
+    max-width: 800px;
+    margin: 0 auto;
   }
-
   .footerSection {
-    text-align: center; /* Center-align text within each section */
+    text-align: center;
   }
 }
 
@@ -148,22 +188,18 @@
   text-decoration: none;
 }
 
-/* Responsive Design */
 @media (max-width: 1024px) {
   .modal {
     max-width: 90%;
     padding: 1.5rem;
   }
-
   .modal h2 {
     font-size: 1.5rem;
   }
-
   .footerContent {
     flex-wrap: nowrap;
     justify-content: center;
   }
-
   .footerSection {
     margin: 0 10px;
     flex-basis: 30%;
@@ -175,18 +211,25 @@
     max-width: 90%;
     padding: 1.5rem;
   }
-
   .modal h2 {
     font-size: 1.5rem;
   }
-
   .footerContent {
     flex-direction: column;
     align-items: center;
   }
-
   .footerSection {
     margin: 10px 0;
     text-align: center;
+  }
+  .heroWrapper :global(.hero-text) p {
+    text-align: center !important;
+    margin: 0 auto;
+    max-width: 90%;
+  }
+  /* Direct targeting with higher specificity */
+  .heroWrapper :global(.hero-buttons) > :global(.cta-button),
+  .heroWrapper :global(.hero-buttons) > :global(.secondary-button) {
+    margin-top: 2rem !important;
   }
 }

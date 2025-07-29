@@ -129,8 +129,8 @@ export default function LandingPage() {
               <img src="/assets/Logo.png" alt="The Megheza Logo" className="logo-image" />
               Megheza
             </a>
-            <button 
-              className="cta-button" 
+            <button
+              className="cta-button"
               onClick={handleLoginClick}
               disabled={isLoginButtonDisabled}
             >
@@ -143,25 +143,27 @@ export default function LandingPage() {
           <section className="hero">
             <div className="container">
               <div className="hero-content fade-in">
-                <div className="hero-text">
-                  <h1>Global Professional Network for Verified Journalists</h1>
-                  <p>
-                    Powered by the Power of 9. For a one-time $9 entry fee, connect with trusted peers worldwide, access exclusive resources, and grow your career in a secure space that values integrity. No noise, no monthly fees—just real journalism, real opportunity. Your voice deserves to be heard—among those who’ve earned the right to speak.
-                  </p>
-                  <div className="hero-buttons">
-                    <button className="cta-button" onClick={handleJoinClick}>
-                      Join
-                    </button>
-                    <button 
-                      className="secondary-button" 
-                      onClick={handleLoginClick}
-                      disabled={isLoginButtonDisabled}
-                    >
-                      Login
-                    </button>
-                  </div>
-                  <div className="hero-checklist">
-                    ✓ Verified journalists only ✓ End-to-end encryption ✓ Source protection
+                <div className={styles.heroWrapper}>
+                  <div className="hero-text">
+                    <h1>Global Professional Network for Verified Journalists</h1>
+                    <p>
+                      Powered by the Power of 9. For a one-time $9 entry fee, connect with trusted peers worldwide, access exclusive resources, and grow your career in a secure space that values integrity. No noise, no monthly fees—just real journalism, real opportunity. Your voice deserves to be heard—among those who’ve earned the right to speak.
+                    </p>
+                    <div className="hero-buttons">
+                      <button className="cta-button" onClick={handleJoinClick}>
+                        Join
+                      </button>
+                      <button
+                        className="secondary-button"
+                        onClick={handleLoginClick}
+                        disabled={isLoginButtonDisabled}
+                      >
+                        Login
+                      </button>
+                    </div>
+                    <div className="hero-checklist">
+                      ✓ Verified journalists only ✓ End-to-end encryption ✓ Source protection
+                    </div>
                   </div>
                 </div>
                 <div className="hero-visual">
