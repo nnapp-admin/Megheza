@@ -1,4 +1,3 @@
-// pages/api/register.js
 import mongoose from 'mongoose';
 import Journalist from '../../models/Journalist';
 
@@ -24,7 +23,17 @@ export default async function handler(req, res) {
   try {
     await connectDB();
 
-    const data = req.body;
+    const data = { ...req.body };
+
+    // Convert languages to array if it's a string
+    if (typeof data.languages === 'string') {
+      data.languages = data.languages
+        .split(',')
+        .map((lang) => lang.trim())
+        .filter((lang) => lang.length > 0);
+    } else if (!Array.isArray(data.languages)) {
+      return res.status(400).json({ errors: { languages: 'Languages must be a string or array' } });
+    }
 
     // Validate file sizes (150 KB limit)
     if (data.profilePicture && Buffer.from(data.profilePicture.split(',')[1], 'base64').length > 150 * 1024) {
@@ -58,4 +67,4 @@ export default async function handler(req, res) {
     }
     return res.status(500).json({ message: 'Internal server error' });
   }
-}
+};

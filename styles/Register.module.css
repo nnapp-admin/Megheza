@@ -348,6 +348,17 @@
   text-align: center;
 }
 
+.checkboxLabel .termsLink {
+  color: #2600ff;
+  text-decoration: underline !important;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.checkboxLabel .termsLink:hover {
+  color: #ffffff;
+}
+
 .registerSection .note,
 .registerSection .warning {
   font-size: 0.9rem !important;
@@ -481,7 +492,7 @@
 }
 
 .modalClose:hover {
-  color: #ff69b4;
+  color: #0051ff;
 }
 
 .modalContent {
@@ -524,8 +535,8 @@
 }
 
 .termsLink {
-  color: #ff69b4;
-  text-decoration: underline;
+  color: #1900ff;
+  text-decoration: underline !important;
   cursor: pointer;
   transition: color 0.3s ease;
 }
@@ -655,7 +666,7 @@
   }
 
   .checkboxLabel {
-    font-size: 2rem;
+    font-size: 0.9rem;
     line-height: 1.5;
     font-weight: 400;
   }

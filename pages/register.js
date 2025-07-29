@@ -1,4 +1,3 @@
-// pages/register.js
 import { useState, useRef, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -648,14 +647,23 @@ export default function RegisterPage() {
                 required={required}
               />
               <span dangerouslySetInnerHTML={{ __html: label }}></span>
-              <div
-                dangerouslySetInnerHTML={{ __html: text }}
-                onClick={(e) => {
-                  if (e.target.classList.contains('termsLink')) {
-                    openTermsModal();
-                  }
-                }}
-              />
+              <div>
+                {text.includes('termsLink') ? (
+                  <>
+                    {text.split('<span class="termsLink">')[0]}
+                    <span
+                      className={styles.termsLink}
+                      onClick={openTermsModal}
+                      dangerouslySetInnerHTML={{
+                        __html: text.split('<span class="termsLink">')[1].split('</span>')[0],
+                      }}
+                    />
+                    {text.split('</span>')[1]}
+                  </>
+                ) : (
+                  <span dangerouslySetInnerHTML={{ __html: text }} />
+                )}
+              </div>
             </label>
             {errors[name] && <p className={styles.error}>{errors[name]}</p>}
           </div>
