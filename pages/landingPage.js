@@ -6,12 +6,23 @@ import styles from '../styles/LandingPage.module.css'; // Import CSS module for 
 export default function LandingPage() {
   const router = useRouter();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [isLoginButtonDisabled, setIsLoginButtonDisabled] = useState(true); // Changed to true
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
 
+  // Remove useEffect for enabling/disabling submit button since it should always be disabled
+  // Keep input state updates for consistency, but they won't affect the button
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    if (name === 'phone') {
+      setPhone(value);
+    } else if (name === 'password') {
+      setPassword(value);
+    }
+    console.log(`Input changed - ${name}: ${value}`);
+  };
+
+  // Existing useEffect for scroll animations
   useEffect(() => {
-    // Scroll animations
     const observerOptions = {
       threshold: 0.05,
       rootMargin: '0px 0px -100px 0px',
@@ -30,7 +41,6 @@ export default function LandingPage() {
       observer.observe(el);
     });
 
-    // Smooth scrolling for navigation links
     const handleSmoothScroll = (e) => {
       e.preventDefault();
       const targetId = e.currentTarget.getAttribute('href');
@@ -48,17 +58,14 @@ export default function LandingPage() {
       anchor.addEventListener('click', handleSmoothScroll);
     });
 
-    // Add .loaded class to body after animations
     const timer = setTimeout(() => {
       document.body.classList.add('loaded');
     }, 1000);
 
-    // Ensure .loaded is added on window load as fallback
     window.addEventListener('load', () => {
       document.body.classList.add('loaded');
     });
 
-    // Cleanup event listeners on component unmount
     return () => {
       anchors.forEach((anchor) => {
         anchor.removeEventListener('click', handleSmoothScroll);
@@ -76,34 +83,21 @@ export default function LandingPage() {
   };
 
   const handleLoginClick = () => {
-    if (!phone && !password) {
-      setIsLoginModalOpen(true);
-    }
+    console.log('Login button clicked, opening modal');
+    setIsLoginModalOpen(true);
   };
 
   const handleCloseModal = () => {
+    console.log('Closing modal, resetting form');
     setIsLoginModalOpen(false);
+    setPhone('');
+    setPassword('');
   };
 
   const handleLoginSubmit = (e) => {
     e.preventDefault();
-    // Log the input (for debugging, can be removed in production)
-    console.log('Login submitted:', {
-      phone: e.target.phone.value,
-      password: e.target.password.value,
-    });
-    setIsLoginButtonDisabled(true);
-    // Redirect to dashboard regardless of input
-    router.push('/dashboard');
-    setIsLoginModalOpen(false);
-  };
-
-  const handleInputChange = (e) => {
-    if (e.target.name === 'phone') {
-      setPhone(e.target.value);
-    } else if (e.target.name === 'password') {
-      setPassword(e.target.value);
-    }
+    // Do nothing to prevent any submission action
+    console.log('Submit button clicked, but no action taken');
   };
 
   return (
@@ -129,11 +123,7 @@ export default function LandingPage() {
               <img src="/assets/Logo.png" alt="The Megheza Logo" className="logo-image" />
               Megheza
             </a>
-            <button
-              className="cta-button"
-              onClick={handleLoginClick}
-              disabled={isLoginButtonDisabled}
-            >
+            <button className="cta-button" onClick={handleLoginClick}>
               Login
             </button>
           </nav>
@@ -153,11 +143,7 @@ export default function LandingPage() {
                       <button className="cta-button" onClick={handleJoinClick}>
                         Join
                       </button>
-                      <button
-                        className="secondary-button"
-                        onClick={handleLoginClick}
-                        disabled={isLoginButtonDisabled}
-                      >
+                      <button className="secondary-button" onClick={handleLoginClick}>
                         Login
                       </button>
                     </div>
@@ -268,7 +254,11 @@ export default function LandingPage() {
                     onChange={handleInputChange}
                   />
                 </div>
-                <button type="submit" className={styles.submitButton}>
+                <button
+                  type="submit"
+                  className={styles.submitButton}
+                  disabled={true} // Always disabled
+                >
                   Login
                 </button>
               </form>

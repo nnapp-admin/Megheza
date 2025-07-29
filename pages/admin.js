@@ -7,22 +7,40 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [expandedRows, setExpandedRows] = useState({});
+  const [password, setPassword] = useState('');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [passwordError, setPasswordError] = useState('');
+
+  const correctPassword = 'w8T#fZ3p@Lq9';
 
   useEffect(() => {
-    const fetchJournalists = async () => {
-      try {
-        const response = await fetch('/api/admin');
-        if (!response.ok) throw new Error('Failed to fetch journalists');
-        const data = await response.json();
-        setJournalists(data);
-        setLoading(false);
-      } catch (err) {
-        setError(err.message);
-        setLoading(false);
-      }
-    };
-    fetchJournalists();
-  }, []);
+    if (isAuthenticated) {
+      const fetchJournalists = async () => {
+        try {
+          const response = await fetch('/api/admin');
+          if (!response.ok) throw new Error('Failed to fetch journalists');
+          const data = await response.json();
+          setJournalists(data);
+          setLoading(false);
+        } catch (err) {
+          setError(err.message);
+          setLoading(false);
+        }
+      };
+      fetchJournalists();
+    }
+  }, [isAuthenticated]);
+
+  const handlePasswordSubmit = (e) => {
+    e.preventDefault();
+    if (password === correctPassword) {
+      setIsAuthenticated(true);
+      setPasswordError('');
+    } else {
+      setPasswordError('Incorrect password');
+      setPassword('');
+    }
+  };
 
   const handleVerifyToggle = async (id, currentStatus) => {
     try {
@@ -55,6 +73,30 @@ export default function AdminPage() {
     }
     return languages || 'N/A';
   };
+
+  if (!isAuthenticated) {
+    return (
+      <div className={styles.modalOverlay}>
+        <div className={styles.modal}>
+          <h2>Enter Password</h2>
+          <form onSubmit={handlePasswordSubmit}>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Password"
+              className={styles.passwordInput}
+              autoFocus
+            />
+            {passwordError && <p className={styles.passwordError}>{passwordError}</p>}
+            <button type="submit" className={styles.submitButton}>
+              Submit
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
 
   if (loading) return <div className={styles.loading}>Loading...</div>;
   if (error) return <div className={styles.error}>Error: {error}</div>;
