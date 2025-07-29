@@ -116,7 +116,33 @@ export default function Support() {
             <div className={styles.container}>
               <h2>Help Center</h2>
               <p>Welcome to the Megheza Help Center — a dedicated, extensive, and constantly evolving knowledge environment built to serve the nuanced needs of professional journalists operating within a verified, global media network. At Megheza, we recognize the dynamic pressures facing media professionals today: shrinking newsroom resources, globalized editorial expectations, personal safety threats, digital surveillance, and the constant race against disinformation. This Help Center exists to anchor journalists with both foundational and cutting-edge resources that support them through every stage of their professional journey.</p>
-              <h3><FaTools /> Platform Onboarding & Optimization</h3>
+              <h3 id="onboarding">Verification Guide</h3>
+              <p>Verification at Megheza is not an algorithmic filter — it is a deliberate, human process that acknowledges the context, commitment, and complexity of real journalism. To protect the credibility of our global network, each applicant is reviewed in layers by verification editors and field liaisons.</p>
+              <h4>What Verification Means</h4>
+              <ul>
+                <li>Verified members are granted full access to Megheza’s editorial tools, peer network, storytelling studios, and collaborative protections.</li>
+                <li>Verification is not temporary. Once accepted, members retain access unless they breach ethics or usage terms.</li>
+                <li>Applicants are judged on the authenticity, depth, and integrity of their journalistic record — not on celebrity status or social media reach.</li>
+              </ul>
+              <h4>Required Materials</h4>
+              <ul>
+                <li>3 to 5 samples of published journalism that demonstrate authorship and journalistic judgment.</li>
+                <li>A summary biography detailing professional experience, geographies of coverage, languages used, and key subject matter areas.</li>
+                <li>Documentation from a recognized newsroom, press council, university journalism program, or non-profit media initiative. Freelancers may submit equivalent credentials or references.</li>
+              </ul>
+              <h4>Optional Materials</h4>
+              <ul>
+                <li>A written reference from a verified Megheza member.</li>
+                <li>Any publicly known awards, major syndications, or journalism fellowships.</li>
+              </ul>
+              <h4>Review Structure</h4>
+              <ul>
+                <li>Applications are reviewed by a team comprised of multilingual editors, investigative journalists, and regional liaisons.</li>
+                <li>Processing times vary by workload, submission completeness, and background checks.</li>
+                <li>Applications are archived under strict data protection and are never shared externally.</li>
+                <li>Rejected applicants may reapply after 90 days. Repeat falsification attempts result in permanent blacklisting across the network.</li>
+              </ul>
+              <h3>Platform Onboarding & Optimization</h3>
               <p>For every verified member, the first touchpoint with Megheza is crucial. The Help Center provides a full walkthrough on how to activate, secure, and optimize your account:</p>
               <ul>
                 <li>Secure password encryption, dual-authentication setup, and IP tracking for anomalous logins.</li>

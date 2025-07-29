@@ -29,13 +29,14 @@ const questions = [
   { section: 3, name: 'videoSubmission', label: '(Optional) Submit a short video (1–2 minutes) introducing yourself and your intent for joining. This may include your background, values, or vision for how you intend to use this platform. Upload to Google Drive, Dropbox, or YouTube and provide the link below.', type: 'url', placeholder: 'Video Submission Link' },
   // Section 4: Self-Declaration
   { section: 4, name: 'selfDeclaration', label: 'Self-Declaration<span class="required-asterisk">*</span>', type: 'checkbox', required: true, text: 'I hereby confirm that I am an active, working journalist. I acknowledge that this platform is intended exclusively for verified media professionals and understand that all submitted information will undergo manual review. I accept that if my application is not approved, all associated data will be securely deleted. I further understand that any false, misleading, or unverifiable claims may result in permanent disqualification from access. I agree to uphold the principles of integrity, accuracy, and professional respect in all interactions within this space.' },
+  { section: 4, name: 'termsAgreement', label: 'Terms Agreement<span class="required-asterisk">*</span>', type: 'checkbox', required: true, text: 'I agree to the <span class="termsLink">Terms of Use and Privacy Policy</span>.' }
 ];
 
 // Total number of questions
 const totalQuestions = questions.length;
 
 export default function RegisterPage() {
-  const [step, setStep] = useState(0); // Tracks current question index (0: Intro, 1 to totalQuestions: Questions, totalQuestions + 1: Submission)
+  const [step, setStep] = useState(0);
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -58,17 +59,19 @@ export default function RegisterPage() {
     reason: '',
     videoSubmission: '',
     selfDeclaration: false,
+    termsAgreement: false, // Added for new checkbox
     profilePicture: null,
   });
   const [previewImage, setPreviewImage] = useState(null);
   const [errors, setErrors] = useState({});
-  const [isLoading, setIsLoading] = useState(false); // New state for loading
+  const [isLoading, setIsLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal
   const fileInputRef = useRef(null);
   const pressCardInputRef = useRef(null);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked, files } = e.target;
-    if (type !== 'file' && type !== 'checkbox' && value.length > 500) return; // Limit to 500 characters
+    if (type !== 'file' && type !== 'checkbox' && value.length > 500) return;
     setFormData((prev) => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : type === 'file' ? files[0] : value,
@@ -91,8 +94,8 @@ export default function RegisterPage() {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setPreviewImage(reader.result); // Store Base64 URL for preview
-        setFormData((prev) => ({ ...prev, profilePicture: reader.result })); // Store Base64 URL in formData
+        setPreviewImage(reader.result);
+        setFormData((prev) => ({ ...prev, profilePicture: reader.result }));
       };
       reader.readAsDataURL(file);
     } else {
@@ -117,11 +120,18 @@ export default function RegisterPage() {
     }
   };
 
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   const validateQuestion = (question) => {
     const newErrors = {};
     const { name, required, conditional } = question;
 
-    // Skip validation if the question is conditional and the condition is not met
     if (conditional && !conditional(formData)) return true;
 
     if (required && !formData[name]) {
@@ -175,13 +185,12 @@ export default function RegisterPage() {
       return;
     }
 
-    setIsLoading(true); // Start loading state
+    setIsLoading(true);
 
-    // Prepare form data for API as JSON (since we're using Base64 strings)
     const formDataToSend = {
       ...formData,
-      profilePicture: formData.profilePicture, // Already Base64 from handleImageChange
-      pressCard: formData.pressCard ? await fileToBase64(formData.pressCard) : null, // Convert pressCard to Base64
+      profilePicture: formData.profilePicture,
+      pressCard: formData.pressCard ? await fileToBase64(formData.pressCard) : null,
     };
 
     try {
@@ -193,7 +202,7 @@ export default function RegisterPage() {
       const result = await response.json();
       if (response.ok) {
         alert(result.message);
-        setStep(0); // Reset to intro page
+        setStep(0);
         setFormData({
           fullName: '',
           email: '',
@@ -216,6 +225,7 @@ export default function RegisterPage() {
           reason: '',
           videoSubmission: '',
           selfDeclaration: false,
+          termsAgreement: false, // Reset termsAgreement
           profilePicture: null,
         });
         setPreviewImage(null);
@@ -231,11 +241,10 @@ export default function RegisterPage() {
     } catch (error) {
       setErrors({ general: 'Failed to submit registration. Please try again.' });
     } finally {
-      setIsLoading(false); // Stop loading state
+      setIsLoading(false);
     }
   };
 
-  // Helper function to convert file to Base64
   const fileToBase64 = (file) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -244,6 +253,193 @@ export default function RegisterPage() {
       reader.readAsDataURL(file);
     });
   };
+
+  // Modal component
+  const Modal = ({ isOpen, onClose, children }) => {
+    if (!isOpen) return null;
+
+    return (
+      <div className={styles.modalOverlay}>
+        <div className={styles.modal}>
+          <button className={styles.modalClose} onClick={onClose} aria-label="Close modal">
+            ×
+          </button>
+          <div className={styles.modalContent}>
+            {children}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Terms and Privacy Policy content
+  const termsContent = (
+    <>
+      <h2>Privacy Policy — Megheza</h2>
+      <p>At Megheza, we believe that privacy is not simply a legal obligation—it is a foundational principle of credible journalism and ethical media infrastructure. Our privacy framework is designed to preserve the dignity, agency, and professional autonomy of every verified journalist in our ecosystem. This Privacy Policy outlines the nature of the data we collect, the purposes behind its collection, the security measures deployed to protect it, and your rights as a user operating within a sovereign media platform of international standards.</p>
+      <p>We recognize that the challenges facing journalists today are not only editorial but existential. Surveillance, data breaches, and opaque algorithmic profiling have become normalized. At Megheza, we reject that norm. Our infrastructure is intentionally built to resist exploitation, minimize data retention, and foster a culture of digital sanctity. You are not our product—you are our purpose.</p>
+      <h3>1. Information We Collect and Why It Matters</h3>
+      <p>We collect only the information necessary to establish and maintain a trusted journalistic environment. Every piece of data has a purpose rooted in verification, collaboration, or platform functionality. We explicitly avoid collecting any information that does not serve this mission.</p>
+      <p><strong>Personal Identification Data:</strong> When you apply for verification, we collect your full legal name, region of operation, and verifiable journalistic affiliations. This is used solely to assess and verify your professional identity.</p>
+      <p><strong>Professional Documentation:</strong> You may submit credentials such as national press cards, assignment letters, or institutional IDs. These are reviewed by credentialed editors and then permanently deleted within a secure window.</p>
+      <p><strong>Contact Preferences:</strong> Your communication preferences, preferred language(s), and secure contact points allow us to customize your experience while minimizing intrusiveness.</p>
+      <p><strong>Platform Engagement Metrics:</strong> To enhance functionality and relevance, we track which features are used most often, such as cross-border collaboration forums, pitch rooms, and language translation tools.</p>
+      <p><strong>Device Metadata:</strong> We collect minimal technical data such as browser version, device type, and IP address strictly for security and regional customization.</p>
+      <p><strong>Multimedia Contributions:</strong> If you choose to participate in Megheza Originals or the immersive storytelling wing, we will process your visual assets solely for that purpose.</p>
+      <p>We strictly avoid collecting unnecessary personal information—no financial account data, no biometric identifiers, and absolutely no surveillance-based behavior tracking.</p>
+      <h3>2. How We Use Your Data</h3>
+      <p>Our philosophy on data use is direct: all information is processed for the sole benefit of the verified journalist community. Data is never sold, rented, or monetized through third-party advertising.</p>
+      <p>We use your information to:</p>
+      <ul>
+        <li>Verify the authenticity of your journalistic credentials</li>
+        <li>Facilitate secure communication among verified professionals globally</li>
+        <li>Provide you access to specialized features like collaborative storytelling rooms, multilingual editorial tools, and global fellowship opportunities</li>
+        <li>Match your interests with story leads and investigative cohorts</li>
+        <li>Securely store visual submissions and collaborative content within editorial parameters</li>
+      </ul>
+      <p>Where possible, we anonymize usage data to improve platform design without profiling individual users.</p>
+      <h3>3. Your Rights and Data Sovereignty</h3>
+      <p>We believe in a user-first approach to data governance. You are not simply consenting to our framework—you are actively participating in it.</p>
+      <p>You have the right to:</p>
+      <ul>
+        <li>Request full access to all data we hold on you</li>
+        <li>Request edits or corrections to your account or verification data</li>
+        <li>Withdraw participation from any collaborative or public-facing feature</li>
+        <li>Delete your account and have all data purged within seven working days</li>
+      </ul>
+      <p>Consent is explicitly sought for any third-party inclusion, such as showcasing your work in a consortium exhibition or submitting your story to a fellowship program.</p>
+      <h3>4. Data Security Infrastructure</h3>
+      <p>Megheza maintains a fortress-grade digital environment built with principles of digital sovereignty, zero-trust architecture, and human-centered encryption. Some key features include:</p>
+      <ul>
+        <li>End-to-end encrypted messaging and collaboration systems</li>
+        <li>Zero-knowledge proof verification processes</li>
+        <li>Geo-fenced data storage options</li>
+        <li>Compartmentalized access controls for editorial review</li>
+        <li>Two-factor authentication (2FA) required at all user levels</li>
+        <li>Infrastructure compliance with GDPR, Indian IT Rules, and the African Union Convention on Cyber Security</li>
+      </ul>
+      <p>Quarterly vulnerability assessments are conducted in partnership with independent cybersecurity auditors who specialize in civil society infrastructure.</p>
+      <h3>5. Global Data Residency</h3>
+      <p>As a cross-continental network, Megheza stores and processes data in jurisdictionally appropriate environments:</p>
+      <ul>
+        <li>For users in Europe, servers are based in Frankfurt, fully compliant with EU GDPR</li>
+        <li>For Asia-Pacific users, infrastructure is hosted in Singapore with end-to-end safeguards</li>
+        <li>For African journalists, Megheza is actively developing sovereign cloud infrastructure</li>
+        <li>For the Americas, secure hosting is split between Ontario and Virginia</li>
+      </ul>
+      <p>We never transfer data to jurisdictions where journalistic freedom is legally compromised unless a journalist has explicitly chosen to operate there.</p>
+      <h3>6. Cookie Usage and Tracking</h3>
+      <p>Cookies are kept to an absolute minimum. We use them only for:</p>
+      <ul>
+        <li>Maintaining secure login sessions</li>
+        <li>Preserving display preferences</li>
+        <li>Detecting suspicious activity or bot behavior</li>
+      </ul>
+      <p>All cookies expire within 14 days and are automatically cleared upon logout. We do not use cookies for behavioral tracking or advertising.</p>
+      <h3>7. Responsible Vendor Partnerships</h3>
+      <p>Megheza partners only with service providers who sign a binding Data Ethics Agreement. These include:</p>
+      <ul>
+        <li>Encrypted file hosting for story drafts and visual contributions</li>
+        <li>Secure translation services for cross-language editorial rooms</li>
+        <li>Financial disbursement systems for fellowships and grants</li>
+      </ul>
+      <p>Each third-party undergoes rigorous vetting and ongoing auditing. We do not allow integration with ad-based or surveillance-heavy vendors.</p>
+      <h3>8. Data Retention Framework</h3>
+      <p>We apply a strict need-based retention protocol:</p>
+      <ul>
+        <li>Verification documents are deleted within 7 days of account approval</li>
+        <li>Account data is retained as long as the user is active</li>
+        <li>Inactive users receive a notice after 12 months, after which data is anonymized or deleted</li>
+        <li>Published or co-authored material within Megheza Originals is archived unless opted out</li>
+      </ul>
+      <p>We honor individual requests to expunge contributions, including withdrawal from syndication.</p>
+      <h3>9. Policy Updates and Communication</h3>
+      <p>As Megheza evolves, we will continue to adapt this policy to meet new legal, ethical, and technological standards. All changes will be transparently communicated via:</p>
+      <ul>
+        <li>Platform-wide announcements</li>
+        <li>Direct dashboard notifications</li>
+        <li>Updated documentation available within your user portal</li>
+      </ul>
+      <p>You will always have the option to accept or reject new data terms before participating in new features or programs.</p>
+      <h3>10. Accountability and Grievance Redressal</h3>
+      <p>Our internal Data Ethics Office reviews all complaints or disputes involving user data. Investigations are carried out independently of the product or editorial teams, ensuring transparency and fairness. Final decisions are archived for accountability and made available upon request.</p>
+      <p>Megheza is more than a platform—it is a principled structure built on the sanctity of press freedom and human dignity. We do not collect what we do not need. We do not store what we cannot protect. We do not exploit what we cannot ethically defend.</p>
+      <p>In the pursuit of truth, your data is never the cost—it is the responsibility we uphold.</p>
+      <h2>Terms of Service — Megheza</h2>
+      <p><strong>Effective Date: July 27, 2025</strong></p>
+      <p>Welcome to Megheza. These Terms of Service ("Terms") govern your access to and use of the Megheza platform and all associated services, including but not limited to our secure journalist network, collaborative tools, and Megheza Originals storytelling segment. By using our platform, you agree to abide by these terms in their entirety. If you do not accept these Terms, you may not access or use Megheza.</p>
+      <p>These Terms are intended to protect both the individual journalist and the integrity of our global media ecosystem. Our platform is designed specifically for verified professionals in journalism, and the standards outlined here reflect the professional, ethical, and security expectations we uphold.</p>
+      <h3>1. Acceptance of Terms</h3>
+      <p>By registering for or accessing any part of Megheza, you affirm that:</p>
+      <ul>
+        <li>You are a verified journalist or media professional with proof of credentials.</li>
+        <li>You have read, understood, and agree to be bound by these Terms.</li>
+        <li>You are not using the platform to impersonate, deceive, or misrepresent yourself or others.</li>
+      </ul>
+      <p>Megheza reserves the right to modify these Terms at any time. Any changes will be communicated via your dashboard and prominently on the homepage. Continued use after such modifications indicates your acceptance of the updated Terms.</p>
+      <h3>2. Eligibility</h3>
+      <p>Access to Megheza is strictly limited to verified individuals working in journalism or related media fields. To be eligible, you must:</p>
+      <ul>
+        <li>Submit verifiable documentation (e.g., press credentials, letters from editors or recognized institutions).</li>
+        <li>Successfully pass the verification process carried out by our human review team.</li>
+        <li>Refrain from using pseudonyms or unverified affiliations unless explicitly permitted for safety reasons.</li>
+      </ul>
+      <p>Megheza retains the right to deny, revoke, or suspend access if a user is found to have misrepresented their professional identity.</p>
+      <h3>3. User Responsibilities</h3>
+      <p>As a user of Megheza, you agree to:</p>
+      <ul>
+        <li>Maintain the confidentiality of your login credentials.</li>
+        <li>Use the platform solely for lawful, ethical, and professional activities.</li>
+        <li>Respect the privacy and intellectual property of other users.</li>
+        <li>Avoid uploading or sharing content that is defamatory, threatening, or unlawful.</li>
+        <li>Refrain from using bots, scrapers, or automated systems to interact with the platform.</li>
+      </ul>
+      <p>You are solely responsible for the content you submit, including any collaborative work, visuals, and commentary.</p>
+      <h3>4. Verification and Trust</h3>
+      <p>Verification is at the heart of the Megheza platform. To preserve the network's credibility:</p>
+      <ul>
+        <li>All users must undergo one-time verification.</li>
+        <li>Verified status may be revoked if a user engages in unethical practices.</li>
+        <li>Megheza may request updated credentials periodically to ensure continued eligibility.</li>
+        <li>Verification data is reviewed under strict confidentiality by editors who operate under nondisclosure agreements.</li>
+      </ul>
+      <h3>5. Intellectual Property Rights</h3>
+      <p>You retain full copyright to your individual contributions. However:</p>
+      <ul>
+        <li>By uploading content to Megheza, you grant us a non-exclusive, royalty-free, global license to publish, display, and archive your work for the purpose of professional promotion and collaboration.</li>
+        <li>Collaborative content involving multiple members (e.g., in the Megheza Originals segment) will be credited to all contributors, and redistribution will occur only with consent.</li>
+        <li>Unauthorized use of Megheza branding, trademarks, or original works is strictly prohibited.</li>
+      </ul>
+      <h3>6. Platform Use and Restrictions</h3>
+      <p>Megheza may not be used for:</p>
+      <ul>
+        <li>Promoting AI-generated journalism without disclosure.</li>
+        <li>Disseminating propaganda, disinformation, or unauthorized leaks.</li>
+        <li>Recruitment for non-journalistic activities, including political campaigns, lobbying, or corporate PR.</li>
+        <li>Commercial resale or sublicensing of platform content or tools.</li>
+      </ul>
+      <p>Violations may result in account termination and legal action.</p>
+      <h3>7. Account Suspension and Termination</h3>
+      <p>Megheza may suspend or terminate accounts if:</p>
+      <ul>
+        <li>The user violates any part of these Terms.</li>
+        <li>Verification is found to be fraudulent or expired.</li>
+        <li>The user is inactive for more than 12 months without notice.</li>
+      </ul>
+      <p>Users may also voluntarily deactivate their accounts at any time by contacting our support team. Upon termination, any public content authored by the user may remain archived for editorial transparency unless deletion is requested.</p>
+      <h3>8. Disclaimers and Limitations</h3>
+      <p>Megheza is a platform for professional collaboration; we are not liable for disputes between users unless they involve verifiable misconduct on the platform.</p>
+      <p>While we offer a secure digital environment, we cannot guarantee uninterrupted access due to internet outages or force majeure events.</p>
+      <p>Any external links, tools, or integrations are provided as resources and do not constitute endorsements.</p>
+      <h3>9. Indemnity</h3>
+      <p>By using Megheza, you agree to indemnify and hold harmless the platform and its team from any claims, damages, or liabilities arising from your use of the platform, including those related to content you share, projects you join, or collaborations you undertake.</p>
+      <h3>10. Governing Law and Dispute Resolution</h3>
+      <p>These Terms are governed by the laws of the jurisdiction in which Megheza is legally registered. Disputes arising from these Terms shall first be addressed through mutual negotiation. If unresolved, the dispute will be settled via arbitration under recognized international media ethics forums or digital rights tribunals.</p>
+      <h3>11. Contact</h3>
+      <p>For any questions, clarifications, or feedback about these Terms, please reach out to our legal and editorial operations through the communication channels listed on our website.</p>
+      <p>Megheza exists to serve verified media professionals with trust, creativity, and global responsibility. These Terms are designed not just to protect a platform, but to nurture a global media network built on integrity.</p>
+    </>
+  );
 
   const renderQuestion = (question) => {
     const { name, label, type, placeholder, accept, required, maxLength, text } = question;
@@ -409,7 +605,14 @@ export default function RegisterPage() {
                 required={required}
               />
               <span dangerouslySetInnerHTML={{ __html: label }}></span>
-              <div>{text}</div>
+              <div
+                dangerouslySetInnerHTML={{ __html: text }}
+                onClick={(e) => {
+                  if (e.target.classList.contains('termsLink')) {
+                    openModal();
+                  }
+                }}
+              />
             </label>
             {errors[name] && <p className={styles.error}>{errors[name]}</p>}
           </div>
@@ -483,7 +686,7 @@ export default function RegisterPage() {
                 <div className={styles.intro}>
                   <p>
                     This is more than a form—it's your entry into a global consortium where journalism still holds the line. This
-                    space is built for reporters, by reporters,added access is granted only to those who’ve earned their
+                    space is built for reporters, by reporters, and access is granted only to those who’ve earned their
                     place through real work in the field.
                   </p>
                   <p>
@@ -555,6 +758,9 @@ export default function RegisterPage() {
             </div>
           </section>
         </main>
+        <Modal isOpen={isModalOpen} onClose={closeModal}>
+          {termsContent}
+        </Modal>
         <footer className={styles.siteFooter}>
           <div className={styles.container}>
             <div className={styles.footerBottom}>

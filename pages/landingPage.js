@@ -202,7 +202,7 @@ export default function LandingPage() {
                 <ul>
                   <li><a href="/support#support">Help Center</a></li>
                   <li><a href="/support#contact">Contact Us</a></li>
-                  <li><a href="/support#verification">Verification Guide</a></li>
+                  <li><a href="/support#onboarding">Verification Guide</a></li>
                 </ul>
               </div>
               <div className={styles.footerSection}>
@@ -217,8 +217,8 @@ export default function LandingPage() {
                 <h3>Consortium</h3>
                 <ul>
                   <li><a href="/support#consortium">Guidelines</a></li>
-                  <li><a href="/support#consortium">Ethics Code</a></li>
-                  <li><a href="/support#consortium">Best Practices</a></li>
+                  <li><a href="/support#ethics">Ethics Code</a></li>
+                  <li><a href="/support#best-practices">Best Practices</a></li>
                 </ul>
               </div>
             </div>
