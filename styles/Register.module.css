@@ -349,7 +349,7 @@
 }
 
 .checkboxLabel .termsLink {
-  color: #2600ff;
+  color: #b6b6b6;
   text-decoration: underline !important;
   cursor: pointer;
   transition: color 0.3s ease;

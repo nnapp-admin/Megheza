@@ -94,7 +94,7 @@ export default function RegisterPage() {
   };
 
   const handleRoleSelect = (role) => {
-    setFormData((prev) => ({ ...prev, primaryRole: role, otherRole: role === 'Other' ? prev.otherRole : '' }));
+    setFormData((prev) => ({ ...prev, primaryRole: role, otherRole: step === 'Other' ? prev.otherRole : '' }));
     setErrors((prev) => ({ ...prev, primaryRole: '', otherRole: '' }));
   };
 
@@ -726,10 +726,10 @@ export default function RegisterPage() {
               <div className={styles.progressBar}>
                 {step === 0 ? (
                   <span>Introduction</span>
-                ) : step <= totalQuestions ? (
-                  <span>Question {step} of {totalQuestions}</span>
+                ) : step <= 18 ? (
+                  <span>Question {step} of 18</span>
                 ) : (
-                  <span>Review and Submit</span>
+                  <span></span>
                 )}
               </div>
 
@@ -760,9 +760,15 @@ export default function RegisterPage() {
               <form onSubmit={handleSubmit} className={styles.registerForm}>
                 {step > 0 && step <= totalQuestions && (
                   <>
-                    <h2 className={styles.sectionHeader}>
-                      Section {questions[step - 1].section}: {questions[step - 1].section === 1 ? 'Personal Information' : questions[step - 1].section === 2 ? 'Journalism Credentials' : questions[step - 1].section === 3 ? 'Verification Questions' : 'Self-Declaration'}
-                    </h2>
+                    {step <= 18 ? (
+                      <h2 className={styles.sectionHeader}>
+                        Section {questions[step - 1].section}: {questions[step - 1].section === 1 ? 'Personal Information' : questions[step - 1].section === 2 ? 'Journalism Credentials' : 'Verification Questions'}
+                      </h2>
+                    ) : step === 19 ? (
+                      <h2 className={styles.sectionHeader}>Self Declaration</h2>
+                    ) : step === 20 ? (
+                      <h2 className={styles.sectionHeader}>Policy Agreement Section</h2>
+                    ) : null}
                     {renderQuestion(questions[step - 1])}
                     <div className={styles.buttonGroup}>
                       <button type="button" className={styles.backButton} onClick={handleBack}>
