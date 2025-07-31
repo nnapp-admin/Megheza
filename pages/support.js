@@ -104,7 +104,7 @@ export default function Support() {
       <div className={styles.pageWrapper}>
         <header className={styles.header}>
           <nav className={styles.container}>
-            <a href="/landingPage" className={styles.logo}>
+            <a href="/home" className={styles.logo}>
               <img src="/assets/Logo.png" alt="The Megheza Logo" className={styles.logoImage} />
               Megheza
             </a>

@@ -159,6 +159,36 @@
   box-shadow: 0 6px 20px rgba(139, 0, 0, 0.4);
 }
 
+.actionButtons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.deleteButton {
+  background-color: #e53e3e; /* Red color for delete action */
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  font-family: Helvetica, sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.deleteButton:hover {
+  background-color: #c53030; /* Darker red on hover */
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(229, 62, 62, 0.4);
+}
+
+.deleteButton:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(229, 62, 62, 0.5);
+}
+
 .loading,
 .error {
   text-align: center;
@@ -294,6 +324,17 @@
     max-width: 80px;
     max-height: 80px;
   }
+
+  .actionButtons {
+    flex-direction: row;
+    gap: 8px;
+  }
+
+  .verifyButton,
+  .deleteButton {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -335,5 +376,19 @@
   .submitButton {
     font-size: 0.85rem;
     width: 100px;
+  }
+
+  .actionButtons {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .verifyButton,
+  .deleteButton {
+    width: 100%;
+    max-width: 150px;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
   }
 }

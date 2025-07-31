@@ -714,7 +714,7 @@ export default function RegisterPage() {
       <div className={styles.registerContainer}>
         <header className={styles.siteHeader}>
           <nav className={styles.siteNav}>
-            <Link href="/landingPage" className={styles.logo}>
+            <Link href="/home" className={styles.logo}>
               <img src="/assets/Logo.png" alt="The Megheza Logo" className={styles.logoImage} />
               Megheza
             </Link>

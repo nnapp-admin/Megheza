@@ -60,6 +60,28 @@ export default function AdminPage() {
     }
   };
 
+  const handleDeleteJournalist = async (id) => {
+    if (!confirm('Are you sure you want to delete this journalist? This action cannot be undone.')) {
+      return;
+    }
+    try {
+      const response = await fetch(`/api/admin/${id}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      if (!response.ok) throw new Error('Failed to delete journalist');
+      setJournalists((prev) => prev.filter((journalist) => journalist._id !== id));
+      setExpandedRows((prev) => {
+        const newExpandedRows = { ...prev };
+        delete newExpandedRows[id];
+        return newExpandedRows;
+      });
+      alert('Journalist deleted successfully');
+    } catch (err) {
+      alert(`Error: ${err.message}`);
+    }
+  };
+
   const toggleRow = (id) => {
     setExpandedRows((prev) => ({
       ...prev,
@@ -316,12 +338,20 @@ export default function AdminPage() {
                       </div>
                       <div className={styles.detailItem}>
                         <span className={styles.detailLabel}>Action:</span>
-                        <button
-                          className={styles.verifyButton}
-                          onClick={() => handleVerifyToggle(journalist._id, journalist.verified)}
-                        >
-                          {journalist.verified ? 'Unverify' : 'Verify'}
-                        </button>
+                        <div className={styles.actionButtons}>
+                          <button
+                            className={styles.verifyButton}
+                            onClick={() => handleVerifyToggle(journalist._id, journalist.verified)}
+                          >
+                            {journalist.verified ? 'Unverify' : 'Verify'}
+                          </button>
+                          <button
+                            className={styles.deleteButton}
+                            onClick={() => handleDeleteJournalist(journalist._id)}
+                          >
+                            Delete
+                          </button>
+                        </div>
                       </div>
                     </div>
                   )}

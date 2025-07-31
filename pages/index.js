@@ -22,7 +22,7 @@ export default function SplashPage() {
   const handleLogoClick = () => {
     router
 
-.push('/landingPage');
+.push('/home');
   };
 
   return (
