@@ -1,4 +1,48 @@
-/* LandingPage.module.css */
+/* Ensure the section takes the full viewport width */
+.world-image-section {
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Prevent any overflow issues */
+}
+
+/* Lottie container spans full width and centers content */
+.lottieContainer {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Ensure the Lottie animation itself takes full width */
+.lottieContainer > div {
+  width: 100% !important;
+  height: auto !important;
+  max-width: 100vw; /* Prevent exceeding viewport width */
+}
+
+/* Remove padding for smaller screens to maximize width */
+@media (max-width: 1230px) {
+  .world-image-section {
+    padding: 0;
+  }
+  .lottieContainer {
+    padding: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .world-image-section {
+    padding: 0;
+  }
+  .lottieContainer {
+    padding: 0;
+  }
+}
+
+/* Existing styles below */
 .modalOverlay {
   position: fixed;
   top: 0;
@@ -227,7 +271,6 @@
     margin: 0 auto;
     max-width: 90%;
   }
-  /* Direct targeting with higher specificity */
   .heroWrapper :global(.hero-buttons) > :global(.cta-button),
   .heroWrapper :global(.hero-buttons) > :global(.secondary-button) {
     margin-top: 2rem !important;

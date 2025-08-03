@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import styles from '../styles/LandingPage.module.css'; // Import CSS module for modal styling
+import Lottie from 'react-lottie'; // Import react-lottie
+import worldAnimation from '../public/assets/world.json'; // Import the Lottie JSON file
+import styles from '../styles/LandingPage.module.css'; // Import CSS module for styling
 
 export default function LandingPage() {
   const router = useRouter();
@@ -9,8 +11,16 @@ export default function LandingPage() {
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
 
-  // Remove useEffect for enabling/disabling submit button since it should always be disabled
-  // Keep input state updates for consistency, but they won't affect the button
+  // Lottie animation options
+  const lottieOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: worldAnimation,
+    rendererSettings: {
+      preserveAspectRatio: 'xMidYMid slice',
+    },
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     if (name === 'phone') {
@@ -21,7 +31,6 @@ export default function LandingPage() {
     console.log(`Input changed - ${name}: ${value}`);
   };
 
-  // Existing useEffect for scroll animations
   useEffect(() => {
     const observerOptions = {
       threshold: 0.05,
@@ -96,7 +105,6 @@ export default function LandingPage() {
 
   const handleLoginSubmit = (e) => {
     e.preventDefault();
-    // Do nothing to prevent any submission action
     console.log('Submit button clicked, but no action taken');
   };
 
@@ -160,13 +168,14 @@ export default function LandingPage() {
           </section>
 
           <section className="world-image-section scroll-reveal">
-            <img
-              src="/assets/world.png"
-              alt="World Network"
-              className="world-image"
-              width="1230"
-              height="300"
-            />
+            <div className={styles.lottieContainer}>
+              <Lottie
+                options={lottieOptions}
+                height="auto"
+                width="100%"
+                isClickToPauseDisabled
+              />
+            </div>
           </section>
 
           <section className="cta-section">
@@ -221,7 +230,6 @@ export default function LandingPage() {
           </div>
         </footer>
 
-        {/* Login Modal */}
         {isLoginModalOpen && (
           <div className={styles.modalOverlay}>
             <div className={styles.modal}>
@@ -257,7 +265,7 @@ export default function LandingPage() {
                 <button
                   type="submit"
                   className={styles.submitButton}
-                  disabled={true} // Always disabled
+                  disabled={true}
                 >
                   Login
                 </button>
